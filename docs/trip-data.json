@@ -1,0 +1,444 @@
+{
+  "trip": {
+    "title": "弾丸ソウル 2026",
+    "date": "2026-06-17",
+    "dayOfWeek": "水曜日",
+    "travelers": [
+      { "name": "靖晃", "nameKo": "키타무라 야스아키", "email": "yasuaki@primecool.com", "seat": "22A" },
+      { "name": "ひとみ", "nameKo": "키타무라 히토미", "email": "hitomi@primecool.com", "seat": "22B" }
+    ]
+  },
+  "flights": {
+    "outbound": {
+      "flight": "MM809",
+      "aircraft": "A320 Neo",
+      "fareClass": "ミニマム QLT",
+      "departure": { "airport": "羽田T3", "time": "02:10", "timezone": "Asia/Tokyo" },
+      "arrival": { "airport": "仁川T1", "time": "04:40", "timezone": "Asia/Seoul" },
+      "checkedBaggage": { "靖晃": false, "ひとみ": false }
+    },
+    "return": {
+      "flight": "MM808",
+      "aircraft": "A320 Neo",
+      "fareClass": "ミニマム SLT",
+      "departure": { "airport": "仁川T1", "time": "22:35", "timezone": "Asia/Seoul" },
+      "arrival": { "airport": "羽田T3", "time": "00:55", "timezone": "Asia/Tokyo", "nextDay": true },
+      "checkedBaggage": { "靖晃": true, "ひとみ": false },
+      "isLastFlight": true,
+      "peachDeadlineMinutes": 50
+    }
+  },
+  "itinerary": [
+    {
+      "id": "depart-home",
+      "time": { "start": "22:15", "end": "23:25", "tz": "Asia/Tokyo", "date": "2026-06-16" },
+      "who": "夫婦",
+      "emoji": "🚗",
+      "title": "家を出発（羽田へ・70分）",
+      "notes": "P5駐車場・ガソリン満タン。e-Arrival Card事前申請済みか確認。K-ETAは免除。"
+    },
+    {
+      "id": "arrive-haneda",
+      "time": { "start": "23:25", "end": "23:30", "tz": "Asia/Tokyo", "date": "2026-06-16" },
+      "who": "夫婦",
+      "emoji": "🛬",
+      "title": "羽田T3着（出発165分前）",
+      "notes": "1階Air LAWSON（24時間）で機内用軽食を調達。"
+    },
+    {
+      "id": "checkin-outbound",
+      "time": { "start": "23:30", "end": "00:15", "tz": "Asia/Tokyo", "date": "2026-06-16" },
+      "who": "夫婦",
+      "emoji": "🎫",
+      "title": "チェックイン（ピーチは締切厳しめ）",
+      "notes": "往路は夫婦とも受託手荷物なし。座席: 靖晃22A / ひとみ22B。"
+    },
+    {
+      "id": "immigration-outbound",
+      "time": { "start": "00:15", "end": "00:45", "tz": "Asia/Tokyo" },
+      "who": "夫婦",
+      "emoji": "🛂",
+      "title": "出国審査・保安検査（往路）",
+      "notes": "深夜帯で比較的空いている。モバイルバッテリーは手荷物で。"
+    },
+    {
+      "id": "boarding-outbound",
+      "time": { "start": "00:45", "end": "02:10", "tz": "Asia/Tokyo" },
+      "who": "夫婦",
+      "emoji": "✈️",
+      "title": "搭乗ゲートへ → MM809 02:10発",
+      "notes": "機内では仮眠に全振り。アイマスク・ネックピロー・耳栓。"
+    },
+    {
+      "id": "arrive-icn",
+      "time": { "start": "04:40", "end": "06:08", "tz": "Asia/Seoul" },
+      "who": "夫婦",
+      "emoji": "🛬",
+      "title": "仁川T1着・入国審査",
+      "notes": "e-Arrival Card事前申請済みであること。SES同時登録を打診（자동게이트 등록 가능해요?）。早朝は登録センター閉の可能性。06:05までにAREXホームへ。"
+    },
+    {
+      "id": "arex-inbound",
+      "time": { "start": "06:08", "end": "06:51", "tz": "Asia/Seoul" },
+      "who": "夫婦",
+      "emoji": "🚆",
+      "title": "AREX A1004でソウル駅へ（4号車6C/6D）",
+      "notes": "直通43分。6C（ひとみ）/ 6D（靖晃）。バウチャーQRで乗車。"
+    },
+    {
+      "id": "breakfast",
+      "time": { "start": "06:51", "end": "08:30", "tz": "Asia/Seoul" },
+      "who": "夫婦",
+      "emoji": "🥣",
+      "title": "朝食・瑞源（서원죽）明洞アワビ粥",
+      "notes": "ソウル駅から4号線で明洞へ（8分）。7:00開店、退渓路141、明洞駅10番出口すぐ。現金推奨（2人4-5万W）。"
+    },
+    {
+      "id": "yas-to-station",
+      "time": { "start": "08:30", "end": "08:58", "tz": "Asia/Seoul" },
+      "who": "靖晃",
+      "emoji": "🚇",
+      "title": "明洞→ソウル駅移動（KTXへ）",
+      "notes": "4号線で明洞→ソウル駅（8分）。08:58 KTX-청룡017にホーム3分前必着。"
+    },
+    {
+      "id": "hitomi-to-apgujeong",
+      "time": { "start": "08:30", "end": "10:00", "tz": "Asia/Seoul" },
+      "who": "ひとみ",
+      "emoji": "🚇",
+      "title": "明洞散策→狎鴎亭へ移動→Goshen着",
+      "notes": "朝食後、明洞で少し散策。9:00頃出発→3号線新沙駅（30分）→徒歩15分→10:00 Goshen着。"
+    },
+    {
+      "id": "ktx-outbound",
+      "time": { "start": "08:58", "end": "09:50", "tz": "Asia/Seoul" },
+      "who": "靖晃",
+      "emoji": "🚄",
+      "title": "往路・KTX-청룡 017 特室で大田へ（動力分散）",
+      "notes": "1号車7D。最新の動力分散方式、300km/h到達212秒。乗り鉄の本命。"
+    },
+    {
+      "id": "daejeon-atm-food",
+      "time": { "start": "09:50", "end": "10:50", "tz": "Asia/Seoul" },
+      "who": "靖晃",
+      "emoji": "🏧🌶️",
+      "title": "Global ATMで現金確保→광천식당で두부두루치기",
+      "notes": "駅のGlobal ATM（ウリ/ハナ銀行）で5-10万Wキャッシング。日本語表示、4桁+ENTER。광천식당: 두부두루치기+공기밥（면사리は省略で胃袋温存）約9,000W。現金推奨。"
+    },
+    {
+      "id": "goshen",
+      "time": { "start": "10:00", "end": "12:00", "tz": "Asia/Seoul" },
+      "who": "ひとみ",
+      "emoji": "💄",
+      "title": "Goshen Beauty（支払済）",
+      "notes": "도산공원店。Clean and Pure。英語対応可。施術後、明洞へ移動→靖晃と合流予定。"
+    },
+    {
+      "id": "seongsim",
+      "time": { "start": "10:50", "end": "11:50", "tz": "Asia/Seoul" },
+      "who": "靖晃",
+      "emoji": "🥐",
+      "title": "성심당で튀김소보로・부추빵（お土産）",
+      "notes": "大田名物。튀김소보로（揚げそぼろパン）看板。부추빵（ニラパン）。カード可。"
+    },
+    {
+      "id": "daejeon-return",
+      "time": { "start": "11:50", "end": "12:28", "tz": "Asia/Seoul" },
+      "who": "靖晃",
+      "emoji": "🚶",
+      "title": "大田駅へ戻る・ホームへ",
+      "notes": "お土産を手荷物にまとめる。トイレ・飲み物確保。"
+    },
+    {
+      "id": "hitomi-to-myeongdong",
+      "time": { "start": "12:00", "end": "12:30", "tz": "Asia/Seoul" },
+      "who": "ひとみ",
+      "emoji": "🚇",
+      "title": "狎鴎亭→明洞へ移動（片道30分）",
+      "notes": "T-money利用。明洞で靖晃と合流予定。"
+    },
+    {
+      "id": "ktx-return",
+      "time": { "start": "12:28", "end": "13:45", "tz": "Asia/Seoul" },
+      "who": "靖晃",
+      "emoji": "🚄",
+      "title": "復路・通常KTX 024 一般室でソウルへ（動力集中・初体験）",
+      "notes": "動力集中方式の初体験。往路の청룡（動力分散）との乗り比べ。13:36ソウル駅着→明洞移動。"
+    },
+    {
+      "id": "hitomi-lunch",
+      "time": { "start": "12:30", "end": "13:45", "tz": "Asia/Seoul" },
+      "who": "ひとみ",
+      "emoji": "☕",
+      "title": "明洞で昼食・買い物 → 合流へ",
+      "notes": "Mastercard/T-money。明洞で靖晃と合流。"
+    },
+    {
+      "id": "meetup",
+      "time": { "start": "13:45", "end": "14:15", "tz": "Asia/Seoul" },
+      "who": "夫婦",
+      "emoji": "🤝",
+      "title": "明洞でひとみと合流",
+      "notes": "靖晃KTX024→ソウル駅13:36着→地下鉄で明洞へ。午後の部スタート。"
+    },
+    {
+      "id": "myeongdong-shopping",
+      "time": { "start": "14:15", "end": "15:15", "tz": "Asia/Seoul" },
+      "who": "夫婦",
+      "emoji": "🛍️",
+      "title": "明洞ショッピング",
+      "notes": "WOWPASSは使わない（現金化一択）。Mastercard中心。"
+    },
+    {
+      "id": "buchon-yukhoe",
+      "time": { "start": "15:15", "end": "16:30", "tz": "Asia/Seoul" },
+      "who": "夫婦",
+      "emoji": "🥩",
+      "title": "광장시장 부촌육회で生もの三点",
+      "notes": "鍾路5街駅8番出口。ミシュラン2017-2024。육회+산낙지を2人シェア（味見モード）。QR順番待ち。混雑時は別館へ。Mastercard可。"
+    },
+    {
+      "id": "dongdaemun",
+      "time": { "start": "16:30", "end": "17:00", "tz": "Asia/Seoul" },
+      "who": "夫婦",
+      "emoji": "🏬",
+      "title": "東大門・DDPショッピング",
+      "notes": "Mastercard中心。ナッコプセ前の軽い散策。"
+    },
+    {
+      "id": "nakkopsae",
+      "time": { "start": "17:00", "end": "18:00", "tz": "Asia/Seoul" },
+      "who": "夫婦",
+      "emoji": "🐙",
+      "title": "ナッコプセ夕食（용호동낙지・東大門）",
+      "notes": "낙곱새（タコ・ホルモン・エビの激辛鍋）。Mastercard可。締めは腹具合で判断。18:00までに退店。"
+    },
+    {
+      "id": "free-time",
+      "time": { "start": "18:00", "end": "18:45", "tz": "Asia/Seoul" },
+      "who": "夫婦",
+      "emoji": "🕐",
+      "title": "フリータイム（+45分のゆとり）",
+      "notes": "東大門散策・カフェ休憩等。18:45には移動開始。MM808は最終便（後がない）。"
+    },
+    {
+      "id": "move-to-station",
+      "time": { "start": "18:45", "end": "19:05", "tz": "Asia/Seoul" },
+      "who": "夫婦",
+      "emoji": "🚇",
+      "title": "ソウル駅へ移動開始",
+      "notes": "東大門→地下鉄→ソウル駅。19:36 AREXに間に合わせる。"
+    },
+    {
+      "id": "wowpass-cashout",
+      "time": { "start": "19:05", "end": "19:20", "tz": "Asia/Seoul" },
+      "who": "夫婦",
+      "emoji": "💳",
+      "title": "ソウル駅・WOWPASS現金化（最後の機会）",
+      "notes": "現金化一択（決定済み）。最大96,000W（手数料1,000W）。仁川では出金不可。환불（ファヌル）。"
+    },
+    {
+      "id": "arex-return",
+      "time": { "start": "19:36", "end": "20:19", "tz": "Asia/Seoul" },
+      "who": "夫婦",
+      "emoji": "🚆",
+      "title": "AREX直通で仁川T1へ（19:36発）",
+      "notes": "チケットは19:36のまま（無料変更は安全網として温存）。万一→19:06前倒し可。"
+    },
+    {
+      "id": "icn-snack",
+      "time": { "start": "20:25", "end": "20:40", "tz": "Asia/Seoul" },
+      "who": "夫婦",
+      "emoji": "☕",
+      "title": "仁川で飲み物程度（省略可）",
+      "notes": "省略してチェックインへ直行してもOK。Mastercard/現金。"
+    },
+    {
+      "id": "checkin-return",
+      "time": { "start": "20:40", "end": "21:00", "tz": "Asia/Seoul" },
+      "who": "夫婦",
+      "emoji": "🎒",
+      "title": "チェックイン・荷物預け入れ",
+      "notes": "受託手荷物は靖晃のみ×1。ひとみは全て手荷物。免税店のSTEB袋は靖晃が持つ。ピーチ締切: 出発50分前（21:45）。"
+    },
+    {
+      "id": "immigration-return",
+      "time": { "start": "21:00", "end": "21:20", "tz": "Asia/Seoul" },
+      "who": "夫婦",
+      "emoji": "🛂",
+      "title": "出国審査・保安検査（復路）",
+      "notes": "SES登録済みなら自動ゲート利用可。"
+    },
+    {
+      "id": "duty-free",
+      "time": { "start": "21:30", "end": "22:00", "tz": "Asia/Seoul" },
+      "who": "夫婦",
+      "emoji": "🥃",
+      "title": "免税店（Mastercard/現金で）",
+      "notes": "WOWPASSはソウル駅で現金化済み。酒はSTEB袋→靖晃の手荷物。買い物は靖晃の手荷物枠に集約。酒類免税3本まで。"
+    },
+    {
+      "id": "boarding-return",
+      "time": { "start": "22:00", "end": "22:20", "tz": "Asia/Seoul" },
+      "who": "夫婦",
+      "emoji": "✈️",
+      "title": "搭乗ゲートへ → MM808 22:35発",
+      "notes": "MM808は仁川→羽田の最終便。帰宅は6/18 02:00頃。"
+    }
+  ],
+  "stores": [
+    {
+      "id": "seowon",
+      "name": "瑞源",
+      "nameKo": "서원죽",
+      "reading": "ソウォンジュク",
+      "category": "朝食",
+      "emoji": "🥣",
+      "address": "退渓路141、明洞",
+      "nearStation": "明洞駅10番出口すぐ",
+      "hours": "07:00〜",
+      "rating": 4.8,
+      "ratingCount": 2234,
+      "payment": "現金推奨（外国カード不可の可能性）",
+      "budget": "2人で4〜5万W",
+      "orderScript": "전복죽 두 그릇 주세요.",
+      "orderReading": "チョンボッチュク トゥ グルッ ジュセヨ",
+      "orderMeaning": "アワビ粥を2つください",
+      "notes": "粥は消化が早い。瑞源は評価4.8の名店。"
+    },
+    {
+      "id": "gwangcheon",
+      "name": "광천식당",
+      "nameJa": "光川食堂",
+      "reading": "クァンチョンシクタン",
+      "category": "大田・靖晃のみ",
+      "emoji": "🌶️",
+      "hours": "10:30〜",
+      "closedDay": "月曜",
+      "payment": "現金推奨",
+      "budget": "約9,000W（면사리省略時）",
+      "orderScript": "두부두루치기 하나, 공기밥 하나 주세요. 면사리는 빼 주세요.",
+      "orderReading": "トゥブドゥルチギ ハナ、コンギパプ ハナ ジュセヨ。ミョンサリヌン ッペ ジュセヨ",
+      "orderMeaning": "豆腐の辛味噌煮込み1つ、ご飯1つ。追加麺は抜いてください",
+      "notes": "면사리を省いて胃袋温存。大田駅着後、まずGlobal ATMで現金確保してから入店。"
+    },
+    {
+      "id": "buchon",
+      "name": "부촌육회",
+      "nameJa": "プチョンユッケ",
+      "reading": "プチョンユッケ",
+      "category": "広蔵市場",
+      "emoji": "🥩",
+      "address": "鍾路200-12",
+      "nearStation": "鍾路5街駅8番出口",
+      "hours": "10:00〜21:00",
+      "rating": 4.4,
+      "ratingCount": 2147,
+      "michelin": "2017-2024",
+      "payment": "Mastercard可",
+      "orderScript": "육회 하나, 낙지탕탕이 하나 주세요. 둘이서 나눠 먹을게요.",
+      "orderReading": "ユッケ ハナ、ナクチタンタンイ ハナ ジュセヨ。トゥリソ ナンォ モグルケヨ",
+      "orderMeaning": "ユッケ1つ、活きダコ1つ。2人で分けて食べます",
+      "notes": "2品味見モード。QR順番待ち登録。混雑時は別館Annexへ。活きダコはよく噛む（窒息注意）、ごま油を絡めて。",
+      "extraOrder": {
+        "script": "간/천엽도 추가할게요.",
+        "reading": "カン/チョニョプト チュガハルケヨ",
+        "meaning": "レバー/センマイも追加します（胃袋に余裕があれば）"
+      }
+    },
+    {
+      "id": "yonghodong",
+      "name": "용호동낙지",
+      "nameJa": "ヨンホドンナクチ",
+      "reading": "ヨンホドンナクチ",
+      "category": "東大門・夕食メイン",
+      "emoji": "🐙",
+      "hours": "17:00〜",
+      "payment": "Mastercard可",
+      "orderScript": "낙곱새 이인분 주세요.",
+      "orderReading": "ナッコプセ イインブン ジュセヨ",
+      "orderMeaning": "ナッコプセ（タコ・ホルモン・エビの激辛鍋）2人前ください",
+      "notes": "夕食メイン。辛さ調整可。締めのチャーハン/ラーメンは腹具合で判断。",
+      "extras": [
+        { "script": "볶음밥 추가할게요.", "reading": "ポックムパプ チュガハルケヨ", "meaning": "チャーハン追加" },
+        { "script": "덜 맵게 해 주실 수 있어요?", "reading": "トル メプケ ヘ ジュシル ス イッソヨ?", "meaning": "辛さ控えめにできますか?" }
+      ]
+    }
+  ],
+  "payment": {
+    "strategy": "T-money・Mastercard・現金の三本柱。WOWPASSは現金化一択。",
+    "tmoney": {
+      "role": "交通（地下鉄・バス・AREX一般列車）",
+      "balance": { "靖晃": 15000, "ひとみ": 12000 },
+      "preCharged": true
+    },
+    "mastercard": {
+      "role": "カード可の店・Global ATMキャッシング",
+      "notes": "DCC回避必須: 원화로 결제해 주세요（ウォナロ キョルチェヘ ジュセヨ＝ウォンで決済してください）"
+    },
+    "cash": {
+      "role": "ローカル店・屋台・広蔵市場",
+      "exchanged": 80000,
+      "denomination": "₩50,000×1、₩10,000×3、₩5,000×3、₩1,000×5",
+      "daejeonCashingPlan": "Global ATM（ウリ/ハナ銀行）で5〜10万W。レートより安心優先。"
+    },
+    "wowpass": {
+      "balance": 97100,
+      "strategy": "買い物に使わない。夜ソウル駅で現金化一択。",
+      "cashoutLocation": "ソウル駅構内キオスク",
+      "cashoutAmount": 96000,
+      "fee": 1000
+    }
+  },
+  "emergency": {
+    "mm808IsLastFlight": true,
+    "safetyNets": [
+      "AREX直通 19:36（チケット通り）",
+      "AREX 19:06に無料前倒し（安全網・未使用）",
+      "AREX一般列車（5-12分毎、T-money）",
+      "タクシー: 東大門→仁川 約60-80分、60,000-80,000W"
+    ],
+    "ifMissed": {
+      "sameNight": "帰れない（MM808が最終便）",
+      "nextMorning": {
+        "recommended": "翌朝の成田行きLCC（13社就航、1-3万/人）",
+        "note": "車はP5（羽田）にあるため後日回収が必要",
+        "airlines": "チェジュ・ジンエア・ティーウェイ・エアソウル・エアプサン・イースター・ZIPAIR等"
+      },
+      "nagaspa": {
+        "label": "ギャグ枠（だが合理的）",
+        "route": "仁川→セントレアLCC → ナガスパ → 新幹線で帰京",
+        "cost": "2人で7-10万円",
+        "note": "接続の構造上、セントレア→羽田の国内便（07:20/07:45）は仁川朝便と繋がらないため、ナガスパが最適解になってしまう"
+      }
+    },
+    "railReliability": {
+      "summary": "ソウルは東京より構造的に安全",
+      "reasons": [
+        "ホームドア完備（人身事故リスク低い）",
+        "直通運転少なく連鎖遅延しにくい",
+        "AREXは専用線で地下鉄障害から独立",
+        "障害実績は数年に1回レベル"
+      ]
+    }
+  },
+  "immigration": {
+    "eArrivalCard": {
+      "required": true,
+      "note": "出発前にオンライン申請必須（2026年から紙廃止）"
+    },
+    "keta": {
+      "required": false,
+      "note": "2026年12月末まで免除"
+    },
+    "ses": {
+      "firstTimeProcess": "有人ゲート",
+      "registrationPhrase": "자동게이트 등록 가능해요?（チャドンゲイトゥ トゥンノク カヌンヘヨ）",
+      "centerHours": "月-金 10:00-17:00（早朝着の場合は閉の可能性）"
+    }
+  },
+  "communication": {
+    "auKaihoudai": { "cost": 800, "data": "無制限", "note": "メイン端末" },
+    "rakutenRoaming": { "cost": 0, "data": "2GB/端末", "note": "サブ端末・ひとみ端末" }
+  }
+}

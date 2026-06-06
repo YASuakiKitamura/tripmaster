@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #faf6f0;
+  --card: #ffffff;
+  /* 既定（国内・姫路など）：早稲田大学のスクールカラー「臙脂（えんじ）」 */
+  --accent: #9e1b34;
+  --accent-light: #f6e5ea;
+  --accent-dark: #6b1022;
+  --accent2: #9e1b34; /* 差し色（既定は臙脂と同系） */
+}
+
+/* ソウル（韓国）：青・白・赤 */
+:root[data-trip="seoul-2026"] {
+  --bg: #f7f8fa;
+  --accent: #0047a0; /* 青（主色） */
+  --accent-light: #e4ecf7;
+  --accent-dark: #00337a;
+  --accent2: #cd2e3a; /* 赤（差し色） */
+  --text: #2a2a2a;
+  --text-sub: #6b6560;
+  --border: #e8e0d8;
+  --tag-blue: #1a6b8a;
+  --tag-blue-bg: #e4f2f7;
+  --tag-green: #2d7a3a;
+  --tag-green-bg: #e4f5e8;
+  --tag-orange: #b8600a;
+  --tag-orange-bg: #fef0e0;
+  --tag-purple: #6b3fa0;
+  --tag-purple-bg: #f0e8f7;
+  --shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-card: var(--card);
+  --color-accent: var(--accent);
+  --color-accent-light: var(--accent-light);
+  --color-accent-dark: var(--accent-dark);
+  --color-text: var(--text);
+  --color-text-sub: var(--text-sub);
+  --color-border: var(--border);
+  /* Gotham 代替として Montserrat Bold を全体に。日本語/韓国語は Noto がフォールバック */
+  --font-jp: "Montserrat", "Noto Sans JP", "Hiragino Sans", -apple-system, sans-serif;
+  --font-kr: "Montserrat", "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+  --font-serif-jp: "Montserrat", "Noto Sans JP", "Hiragino Sans", sans-serif;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-jp);
+  font-weight: 600; /* Gotham Bold 寄りの太め基調 */
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* 下部ナビ + iOS セーフエリア分の余白 */
+  padding-bottom: calc(68px + env(safe-area-inset-bottom));
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.font-kr {
+  font-family: var(--font-kr);
+}
+.font-serif-jp {
+  font-family: var(--font-serif-jp);
+}

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#9e1b34"/>
+  <text x="32" y="34" text-anchor="middle" dominant-baseline="central"
+        font-family="Montserrat, Gotham, 'Helvetica Neue', Arial, sans-serif"
+        font-weight="800" font-size="30" letter-spacing="-1.5" fill="#ffffff">PT</text>
+</svg>

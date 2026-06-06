@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>韓国グルメ会話対応表 — 弾丸ソウル 2026.06.17</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Noto+Sans+JP:wght@400;700&family=Noto+Serif+JP:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf6f0;
+    --card: #ffffff;
+    --accent: #c8372d;
+    --accent-light: #f9e8e6;
+    --accent-dark: #8b1a12;
+    --text: #2a2a2a;
+    --text-sub: #6b6560;
+    --border: #e8e0d8;
+    --tag-blue: #1a6b8a;
+    --tag-blue-bg: #e4f2f7;
+    --tag-green: #2d7a3a;
+    --tag-green-bg: #e4f5e8;
+    --tag-orange: #b8600a;
+    --tag-orange-bg: #fef0e0;
+    --tag-purple: #6b3fa0;
+    --tag-purple-bg: #f0e8f7;
+    --shadow: 0 1px 4px rgba(0,0,0,0.06);
+    --shadow-hover: 0 4px 16px rgba(0,0,0,0.10);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: var(--accent);
+    color: #fff;
+    padding: 24px 20px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(200,55,45,0.3);
+  }
+  .header h1 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+  .header p {
+    font-size: 12px;
+    opacity: 0.85;
+    margin-top: 4px;
+  }
+
+  /* ── Nav ── */
+  .nav {
+    display: flex;
+    gap: 8px;
+    padding: 12px 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 76px;
+    z-index: 99;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav a {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    color: var(--text-sub);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+  }
+  .nav a:active, .nav a:hover {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  /* ── Section ── */
+  .section {
+    padding: 20px 16px 8px;
+  }
+  .section-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent-dark);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title .emoji {
+    font-size: 22px;
+    font-family: 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;
+  }
+  .section-desc {
+    font-size: 12px;
+    color: var(--text-sub);
+    margin-bottom: 12px;
+  }
+
+  /* ── Phrase Card ── */
+  .card {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    transition: box-shadow 0.2s;
+  }
+  .card:active {
+    box-shadow: var(--shadow-hover);
+  }
+  .card-situation {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-sub);
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px dashed var(--border);
+  }
+  .korean {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--text);
+    line-height: 1.4;
+    margin-bottom: 4px;
+    letter-spacing: -0.02em;
+  }
+  .reading {
+    font-size: 14px;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .meaning {
+    font-size: 13px;
+    color: var(--text-sub);
+    line-height: 1.5;
+  }
+  .card-note {
+    margin-top: 8px;
+    padding: 8px 10px;
+    background: var(--accent-light);
+    border-radius: 8px;
+    font-size: 12px;
+    color: var(--accent-dark);
+    line-height: 1.5;
+  }
+
+  /* ── Tags ── */
+  .tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+  .tag {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+  }
+  .tag-blue { background: var(--tag-blue-bg); color: var(--tag-blue); }
+  .tag-green { background: var(--tag-green-bg); color: var(--tag-green); }
+  .tag-orange { background: var(--tag-orange-bg); color: var(--tag-orange); }
+  .tag-purple { background: var(--tag-purple-bg); color: var(--tag-purple); }
+
+  /* ── Show-to-staff Banner ── */
+  .show-banner {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── Big Korean (for showing to staff) ── */
+  .big-korean {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 32px;
+    font-weight: 900;
+    text-align: center;
+    padding: 20px 16px;
+    background: #fff;
+    border-radius: 12px;
+    border: 2px solid var(--accent);
+    margin-bottom: 10px;
+    line-height: 1.4;
+    color: var(--text);
+  }
+  .big-korean .sub {
+    display: block;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text-sub);
+    margin-top: 6px;
+    font-family: 'Noto Sans JP', sans-serif;
+  }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    padding: 24px 16px;
+    font-size: 11px;
+    color: var(--text-sub);
+    border-top: 1px solid var(--border);
+    margin-top: 16px;
+  }
+
+  /* ── Divider ── */
+  .divider {
+    height: 8px;
+    background: var(--bg);
+  }
+
+  /* ── Store specific section ── */
+  .store-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 10px;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+  }
+  .store-header .store-icon {
+    font-size: 28px;
+  }
+  .store-header .store-info h3 {
+    font-size: 15px;
+    font-weight: 700;
+  }
+  .store-header .store-info p {
+    font-size: 11px;
+    color: var(--text-sub);
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🍽 韓国グルメ会話対応表</h1>
+  <p>弾丸ソウル 2026.06.17 — スマホで見せて使える実戦フレーズ集</p>
+</div>
+
+<nav class="nav">
+  <a href="#quantity">量の調整</a>
+  <a href="#order">注文</a>
+  <a href="#payment">会計</a>
+  <a href="#trouble">トラブル</a>
+  <a href="#stores">店別フレーズ</a>
+  <a href="#basic">基本</a>
+</nav>
+
+<!-- ═══════════ 量の調整 ═══════════ -->
+<div class="section" id="quantity">
+  <div class="section-title"><span class="emoji">🥢</span>量を調整したい</div>
+  <div class="section-desc">いろいろ味見したい時の必須フレーズ。画面をそのまま店員に見せてもOK</div>
+
+  <div class="show-banner">▼ 店員に見せてください ▼</div>
+
+  <div class="big-korean">
+    반만 주세요.<br>가격은 그대로 괜찮아요.
+    <span class="sub">パンマン ジュセヨ. カギョグン クデロ ケンチャナヨ.<br>量を半分にしてください。値段はそのままで構いません。</span>
+  </div>
+
+  <div class="big-korean">
+    다른 것도 먹고 싶어서요.<br>조금만 주세요.
+    <span class="sub">タルン ゴット モッコ シポソヨ. チョグンマン ジュセヨ.<br>他にも食べたいものがあるので。少しだけください。</span>
+  </div>
+
+  <div class="card">
+    <div class="card-situation">追加の麺・ご飯を断る</div>
+    <div class="korean">면사리는 빼 주세요.</div>
+    <div class="reading">ミョンサリヌン ッペ ジュセヨ</div>
+    <div class="meaning">追加麺は抜いてください（광천식당で有効）</div>
+  </div>
+
+  <div class="card">
+    <div class="card-situation">ご飯を少なめに</div>
+    <div class="korean">밥은 적게 주세요.</div>
+    <div class="reading">パブン チョッケ ジュセヨ</div>
+    <div class="meaning">ご飯は少なめにしてください</div>
+  </div>
+
+  <div class="card">
+    <div class="card-situation">おかず（반찬）の追加を断る</div>
+    <div class="korean">반찬은 괜찮아요.</div>
+    <div class="reading">パンチャヌン ケンチャナヨ</div>
+    <div class="meaning">おかずは大丈夫です（要りません）</div>
+  </div>
+
+  <div class="card">
+    <div class="card-situation">締めの追加を様子見</div>
+    <div class="korean">사리 추가는 나중에 할게요.</div>
+    <div class="reading">サリ チュガヌン ナジュンエ ハルケヨ</div>
+    <div class="meaning">追加（麺/ご飯）は後で決めます（ナッコプセで有効）</div>
+  </div>
+
+  <div class="card">
+    <div class="card-situation">持ち帰りたい</div>
+    <div class="korean">포장해 주세요.</div>
+    <div class="reading">ポジャンヘ ジュセヨ</div>
+    <div class="meaning">包んでください（テイクアウト）。食べきれない時にも</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════ 注文 ═══════════ -->
+<div class="section" id="order">
+  <div class="section-title"><span class="emoji">📋</span>注文する</div>
+  <div class="section-desc">入店から注文までの基本フロー</div>
+
+  <div class="card">
+    <div class="card-situation">入店・人数を伝える</div>
+    <div class="korean">두 명이에요.</div>
+    <div class="reading">トゥ ミョンイエヨ</div>
+    <div class="meaning">2人です</div>
+  </div>
+
+  <div class="card">
+    <div class="card-situation">注文したい</div>
+    <div class="korean">주문할게요.</div>
+    <div class="reading">チュムナルケヨ</div>
+    <div class="meaning">注文します</div>
+  </div>
+
+  <div class="card">
+    <div class="card-situation">メニューを指差して</div>
+    <div class="korean">이거 하나 주세요.</div>
+    <div class="reading">イゴ ハナ ジュセヨ</div>
+    <div class="meaning">これ1つください</div>
+  </div>
+
+  <div class="card">
+    <div class="card-situation">これを2つ</div>
+    <div class="korean">이거 두 개 주세요.</div>
+    <div class="reading">イゴ トゥゲ ジュセヨ</div>
+    <div class="meaning">これ2つください</div>
+  </div>
+
+  <div class="card">
+    <div class="card-situation">おすすめを聞く</div>
+    <div class="korean">뭐가 맛있어요?</div>
+    <div class="reading">ムォガ マシッソヨ?</div>
+    <div class="meaning">何がおいしいですか?</div>
+  </div>
+
+  <div class="card">
+    <div class="card-situation">2人でシェアしたい</div>
+    <div class="korean">둘이서 나눠 먹을게요.</div>
+    <div class="reading">トゥリソ ナンォ モグルケヨ</div>
+    <div class="meaning">2人で分けて食べます</div>
+  </div>
+
+  <div class="card">
+    <div class="card-situation">水がほしい</div>
+    <div class="korean">물 주세요.</div>
+    <div class="reading">ムル ジュセヨ</div>
+    <div class="meaning">お水ください（韓国は基本セルフ。冷水機を探す）</div>
+  </div>
+
+  <div class="card">
+    <div class="card-situation">店員を呼ぶ</div>
+    <div class="korean">저기요!</div>
+    <div class="reading">チョギヨ!</div>
+    <div class="meaning">すみません!（呼びかけ）</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════ 会計 ═══════════ -->
+<div class="section" id="payment">
+  <div class="section-title"><span class="emoji">💳</span>会計・決済</div>
+  <div class="section-desc">T-money・Mastercard・現金の三本柱で対応</div>
+
+  <div class="card">
+    <div class="card-situation">会計したい</div>
+    <div class="korean">계산할게요.</div>
+    <div class="reading">ケサナルケヨ</div>
+    <div class="meaning">お会計します</div>
+  </div>
+
+  <div class="card">
+    <div class="card-situation">カードで払いたい</div>
+    <div class="korean">카드로 할게요.</div>
+    <div class="reading">カドゥロ ハルケヨ</div>
+    <div class="meaning">カードでお願いします</div>
+  </div>
+
+  <div class="card">
+    <div class="card-situation">カード使えますか?</div>
+    <div class="korean">카드 돼요?</div>
+    <div class="reading">カドゥ トェヨ?</div>
+    <div class="meaning">カード使えますか?（ダメなら現金で）</div>
+  </div>
+
+  <div class="card">
+    <div class="card-situation">現金で払う</div>
+    <div class="korean">현금으로 할게요.</div>
+    <div class="reading">ヒョングムロ ハルケヨ</div>
+    <div class="meaning">現金でお願いします</div>
+  </div>
+
+  <div class="card">
+    <div class="card-situation">DCC（通貨選択）を回避</div>
+    <div class="korean">원화로 결제해 주세요.</div>
+    <div class="reading">ウォナロ キョルチェヘ ジュセヨ</div>
+    <div class="meaning">ウォンで決済してください（JPY選択は損、必ずKRW）</div>
+    <div class="card-note">カード端末で「日本円 or 韓国ウォン」と聞かれたら必ず韓国ウォン。日本円を選ぶとDCC手数料で3-5%損します。</div>
+  </div>
+
+  <div class="card">
+    <div class="card-situation">複合決済（端数処理）</div>
+    <div class="korean">나눠서 결제할게요.</div>
+    <div class="reading">ナンォソ キョルチェハルケヨ</div>
+    <div class="meaning">分けて決済します（現金+カード等の複合払い）</div>
+  </div>
+
+  <div class="card">
+    <div class="card-situation">現金を下ろしてきます</div>
+    <div class="korean">현금 뽑고 올게요.</div>
+    <div class="reading">ヒョングム ッポッコ オルケヨ</div>
+    <div class="meaning">現金下ろしてきます（万一現金不足の時）</div>
+    <div class="card-note">慌てず伝えればOK。韓国のローカル食堂ではよくあること。</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════ トラブル ═══════════ -->
+<div class="section" id="trouble">
+  <div class="section-title"><span class="emoji">🆘</span>困った時</div>
+  <div class="section-desc">辛さ調整、アレルギー、席の問題など</div>
+
+  <div class="card">
+    <div class="card-situation">辛さを控えめに</div>
+    <div class="korean">덜 맵게 해 주세요.</div>
+    <div class="reading">トル メプケ ヘ ジュセヨ</div>
+    <div class="meaning">辛さ控えめにしてください</div>
+  </div>
+
+  <div class="card">
+    <div class="card-situation">辛い!水!!</div>
+    <div class="korean">너무 매워요! 물 주세요!</div>
+    <div class="reading">ノム メウォヨ! ムル ジュセヨ!</div>
+    <div class="meaning">辛すぎます! お水ください!</div>
+  </div>
+
+  <div class="card">
+    <div class="card-situation">トイレはどこですか</div>
+    <div class="korean">화장실 어디에요?</div>
+    <div class="reading">ファジャンシル オディエヨ?</div>
+    <div class="meaning">トイレはどこですか?（韓国はビル共用のことが多い）</div>
+  </div>
+
+  <div class="card">
+    <div class="card-situation">待ち時間を聞く</div>
+    <div class="korean">얼마나 기다려야 돼요?</div>
+    <div class="reading">オルマナ キダリョヤ トェヨ?</div>
+    <div class="meaning">どのくらい待ちますか?</div>
+  </div>
+
+  <div class="card">
+    <div class="card-situation">順番待ちの登録</div>
+    <div class="korean">대기 등록하고 싶어요.</div>
+    <div class="reading">テギ トゥンノッカゴ シポヨ</div>
+    <div class="meaning">順番待ちの登録をしたいです（QR or 店頭）</div>
+  </div>
+
+  <div class="card">
+    <div class="card-situation">感謝・美味しかったです</div>
+    <div class="korean">잘 먹었습니다!</div>
+    <div class="reading">チャル モゴッスムニダ!</div>
+    <div class="meaning">ごちそうさまでした!（退店時に言うと喜ばれる）</div>
+  </div>
+
+  <div class="card">
+    <div class="card-situation">少々お待ちを</div>
+    <div class="korean">잠깐만요.</div>
+    <div class="reading">チャムカンマンヨ</div>
+    <div class="meaning">ちょっと待ってください（万能フレーズ）</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════ 店別フレーズ ═══════════ -->
+<div class="section" id="stores">
+  <div class="section-title"><span class="emoji">📍</span>今回の店で使うフレーズ</div>
+  <div class="section-desc">6/17の行程に合わせた店別の注文・会話ガイド</div>
+
+  <!-- 瑞源 -->
+  <div class="store-header">
+    <span class="store-icon">🥣</span>
+    <div class="store-info">
+      <h3>瑞源（서원죽）</h3>
+      <p>明洞・朝食 07:00〜 ／ 現金推奨</p>
+    </div>
+  </div>
+  <div class="card">
+    <div class="korean">전복죽 두 그릇 주세요.</div>
+    <div class="reading">チョンボッチュク トゥ グルッ ジュセヨ</div>
+    <div class="meaning">アワビ粥を2つください</div>
+    <div class="tags">
+      <span class="tag tag-orange">現金推奨</span>
+      <span class="tag tag-blue">2人で4〜5万W</span>
+    </div>
+  </div>
+
+  <!-- 광천식당 -->
+  <div class="store-header">
+    <span class="store-icon">🌶️</span>
+    <div class="store-info">
+      <h3>광천식당（光川食堂）</h3>
+      <p>大田・靖晃のみ 10:30〜 ／ 現金推奨</p>
+    </div>
+  </div>
+  <div class="card">
+    <div class="korean">두부두루치기 하나,<br>공기밥 하나 주세요.<br>면사리는 빼 주세요.</div>
+    <div class="reading">トゥブドゥルチギ ハナ、コンギパプ ハナ ジュセヨ。ミョンサリヌン ッペ ジュセヨ</div>
+    <div class="meaning">豆腐の辛味噌煮込み1つ、ご飯1つ。追加麺は抜いてください</div>
+    <div class="tags">
+      <span class="tag tag-orange">現金</span>
+      <span class="tag tag-green">麺抜きで胃袋温存</span>
+      <span class="tag tag-blue">約9,000W</span>
+    </div>
+  </div>
+
+  <!-- 부촌육회 -->
+  <div class="store-header">
+    <span class="store-icon">🥩</span>
+    <div class="store-info">
+      <h3>부촌육회（プチョンユッケ）</h3>
+      <p>広蔵市場 15:15〜 ／ Mastercard可</p>
+    </div>
+  </div>
+  <div class="card">
+    <div class="korean">육회 하나,<br>낙지탕탕이 하나 주세요.<br>둘이서 나눠 먹을게요.</div>
+    <div class="reading">ユッケ ハナ、ナクチタンタンイ ハナ ジュセヨ。トゥリソ ナンォ モグルケヨ</div>
+    <div class="meaning">ユッケ1つ、活きダコ1つ。2人で分けて食べます</div>
+    <div class="tags">
+      <span class="tag tag-purple">Mastercard</span>
+      <span class="tag tag-green">2品味見モード</span>
+    </div>
+    <div class="card-note">QRで順番待ち登録（店頭）。混雑時は別館（Annex）へ。活きダコはよく噛む（窒息注意）、ごま油を絡めて。</div>
+  </div>
+  <div class="card">
+    <div class="card-situation">レバー/センマイも追加する場合</div>
+    <div class="korean">간/천엽도 추가할게요.</div>
+    <div class="reading">カン/チョニョプト チュガハルケヨ</div>
+    <div class="meaning">レバー/センマイも追加します（胃袋に余裕があれば）</div>
+  </div>
+
+  <!-- 용호동낙지 -->
+  <div class="store-header">
+    <span class="store-icon">🐙</span>
+    <div class="store-info">
+      <h3>용호동낙지（ヨンホドンナクチ）</h3>
+      <p>東大門・夕食 17:00〜 ／ Mastercard可</p>
+    </div>
+  </div>
+  <div class="card">
+    <div class="korean">낙곱새 이인분 주세요.</div>
+    <div class="reading">ナッコプセ イインブン ジュセヨ</div>
+    <div class="meaning">ナッコプセ（タコ・ホルモン・エビの激辛鍋）2人前ください</div>
+    <div class="tags">
+      <span class="tag tag-purple">Mastercard</span>
+      <span class="tag tag-blue">夕食メイン</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-situation">締めの追加（腹具合で判断）</div>
+    <div class="korean">볶음밥 추가할게요.</div>
+    <div class="reading">ポックムパプ チュガハルケヨ</div>
+    <div class="meaning">チャーハン追加します（鍋の残り汁で作る締め）</div>
+  </div>
+  <div class="card">
+    <div class="card-situation">辛さ調整</div>
+    <div class="korean">덜 맵게 해 주실 수 있어요?</div>
+    <div class="reading">トル メプケ ヘ ジュシル ス イッソヨ?</div>
+    <div class="meaning">辛さ控えめにできますか?（スタッフが説明してくれる）</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════ 基本 ═══════════ -->
+<div class="section" id="basic">
+  <div class="section-title"><span class="emoji">💬</span>基本フレーズ</div>
+  <div class="section-desc">食事以外にも使える万能フレーズ</div>
+
+  <div class="card">
+    <div class="korean">감사합니다.</div>
+    <div class="reading">カムサハムニダ</div>
+    <div class="meaning">ありがとうございます</div>
+  </div>
+
+  <div class="card">
+    <div class="korean">괜찮아요.</div>
+    <div class="reading">ケンチャナヨ</div>
+    <div class="meaning">大丈夫です（断る時にも使える万能語）</div>
+  </div>
+
+  <div class="card">
+    <div class="korean">네. / 아니요.</div>
+    <div class="reading">ネ / アニヨ</div>
+    <div class="meaning">はい / いいえ</div>
+  </div>
+
+  <div class="card">
+    <div class="korean">한국어 못해요. 일본 사람이에요.</div>
+    <div class="reading">ハングゴ モッテヨ. イルボン サラミエヨ</div>
+    <div class="meaning">韓国語できません。日本人です</div>
+  </div>
+
+  <div class="card">
+    <div class="korean">영어 메뉴 있어요?</div>
+    <div class="reading">ヨンオ メニュ イッソヨ?</div>
+    <div class="meaning">英語メニューありますか?</div>
+  </div>
+
+  <div class="card">
+    <div class="korean">사진 찍어도 돼요?</div>
+    <div class="reading">サジン ッチゴド トェヨ?</div>
+    <div class="meaning">写真撮ってもいいですか?</div>
+  </div>
+
+  <div class="card">
+    <div class="card-situation">数の言い方（注文に使う固有数詞）</div>
+    <div class="korean">하나 / 둘 / 셋 / 넷 / 다섯</div>
+    <div class="reading">ハナ / トゥル / セッ / ネッ / タソッ</div>
+    <div class="meaning">1 / 2 / 3 / 4 / 5（注文時は「하나 주세요」「두 개 주세요」）</div>
+  </div>
+</div>
+
+<div class="footer">
+  韓国弾丸ソウル 2026.06.17<br>
+  決済ポートフォリオ：T-money（交通）・Mastercard（カード可の店）・現金（ローカル店）<br>
+  WOWPASSは使わない → 夜ソウル駅で現金化一択
+</div>
+
+</body>
+</html>
