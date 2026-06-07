@@ -168,6 +168,7 @@ export default function TimelinePage() {
       <div className="mt-2">
         <TimelineCalendar
           items={items}
+          legs={trip.legs}
           tripId={trip.id}
           now={now}
           onEdit={(it) => setForm({ mode: "edit", item: it })}

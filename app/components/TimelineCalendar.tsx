@@ -7,10 +7,12 @@ import {
   WHO_COLORS,
 } from "../lib/data";
 import type { ItineraryItem } from "../lib/types";
+import type { Leg } from "../lib/resolveTrip";
 import {
   formatSeoulClock,
   seoulDateString,
   seoulDateLabel,
+  seoulWallToMs,
 } from "../lib/useNow";
 import { getPlaceLink, mapUrl } from "../lib/placeLinks";
 
@@ -34,12 +36,24 @@ interface Block {
   laneCount: number;
 }
 
+interface Transport {
+  leg: Leg;
+  topPx: number;
+  heightPx: number;
+  crossesMidnight: boolean;
+}
+
 interface DayGroup {
   date: string;
   label: string;
   gridStartMs: number;
   gridEndMs: number;
   blocks: Block[];
+  transports: Transport[];
+}
+
+function shiftDateStr(d: string, delta: number): string {
+  return seoulDateString(seoulWallToMs(d, "12:00") + delta * 24 * HOUR);
 }
 
 function layoutBlocks(raw: Omit<Block, "lane" | "laneCount">[]): void {
@@ -79,12 +93,14 @@ function layoutBlocks(raw: Omit<Block, "lane" | "laneCount">[]): void {
 
 export function TimelineCalendar({
   items,
+  legs,
   tripId,
   now,
   onEdit,
   onDelete,
 }: {
   items: ItineraryItem[];
+  legs?: { outbound: Leg; return: Leg };
   tripId: string;
   now: number | null;
   onEdit: (item: ItineraryItem) => void;
@@ -100,38 +116,96 @@ export function TimelineCalendar({
       arr.push(it);
       byDate.set(key, arr);
     }
-    return Array.from(byDate.entries())
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([date, list]) => {
-        const starts = list.map(itineraryStartMs);
-        const ends = list.map(itineraryEndMs);
-        const gridStartMs = Math.floor(Math.min(...starts) / HOUR) * HOUR;
-        const gridEndMs = Math.max(
-          Math.ceil(Math.max(...ends) / HOUR) * HOUR,
-          gridStartMs + HOUR,
+    const dates = Array.from(byDate.keys()).sort((a, b) => a.localeCompare(b));
+
+    // 便（移動）を「実際の日付」に割り当てる。便にdateが無く深夜便で日跨ぎするため、
+    // 往路は到着が最初の予定に最も近い日、復路は出発が最後の予定に最も近い日を選ぶ。
+    const legByDate = new Map<
+      string,
+      { leg: Leg; startMs: number; endMs: number; cross: boolean }[]
+    >();
+    if (legs && dates.length) {
+      const starts0 = items.map(itineraryStartMs);
+      const ends0 = items.map(itineraryEndMs);
+      const earliest = Math.min(...starts0);
+      const latestEnd = Math.max(...ends0);
+      const candDates = Array.from(
+        new Set([
+          shiftDateStr(dates[0], -1),
+          ...dates,
+          shiftDateStr(dates[dates.length - 1], 1),
+        ]),
+      );
+      const legAbs = (d: string, leg: Leg) => {
+        const start = seoulWallToMs(d, leg.fromTime);
+        let end = seoulWallToMs(d, leg.toTime);
+        const cross = end <= start;
+        if (cross) end += 24 * HOUR;
+        return { start, end, cross };
+      };
+      const pickDate = (leg: Leg, score: (a: { start: number; end: number }) => number) =>
+        candDates.reduce(
+          (best, d) => (score(legAbs(d, leg)) < score(legAbs(best, leg)) ? d : best),
+          candDates[0],
         );
-        const raw = list.map((it) => {
-          const startMs = itineraryStartMs(it);
-          const endMs = Math.max(itineraryEndMs(it), startMs);
-          const durMin = (endMs - startMs) / 60000;
-          return {
-            item: it,
-            startMs,
-            endMs,
-            topPx: ((startMs - gridStartMs) / 60000) * PX_PER_MIN,
-            heightPx: Math.max(MIN_BLOCK_PX, durMin * PX_PER_MIN),
-          };
-        });
-        layoutBlocks(raw);
+      const push = (d: string, leg: Leg) => {
+        const a = legAbs(d, leg);
+        // 通常便は実際の到着まで表示。深夜跨ぎ便だけグリッドが伸びすぎないよう90分に丸める。
+        const visEnd = a.cross ? a.start + 90 * 60000 : a.end;
+        const key = seoulDateString(a.start);
+        const arr = legByDate.get(key) ?? [];
+        arr.push({ leg, startMs: a.start, endMs: visEnd, cross: a.cross });
+        legByDate.set(key, arr);
+      };
+      // 往路: 到着が最初の予定に最も近い日 / 復路: 出発が最後の予定に最も近い日
+      push(pickDate(legs.outbound, (a) => Math.abs(a.end - earliest)), legs.outbound);
+      push(pickDate(legs.return, (a) => Math.abs(a.start - latestEnd)), legs.return);
+    }
+
+    // 予定のある日 ∪ 便のある日
+    const groupDates = Array.from(
+      new Set([...dates, ...legByDate.keys()]),
+    ).sort((a, b) => a.localeCompare(b));
+
+    return groupDates.map((date) => {
+      const list = byDate.get(date) ?? [];
+      const legList = legByDate.get(date) ?? [];
+      const starts = [...list.map(itineraryStartMs), ...legList.map((l) => l.startMs)];
+      const ends = [...list.map(itineraryEndMs), ...legList.map((l) => l.endMs)];
+      const gridStartMs = Math.floor(Math.min(...starts) / HOUR) * HOUR;
+      const gridEndMs = Math.max(
+        Math.ceil(Math.max(...ends) / HOUR) * HOUR,
+        gridStartMs + HOUR,
+      );
+      const raw = list.map((it) => {
+        const startMs = itineraryStartMs(it);
+        const endMs = Math.max(itineraryEndMs(it), startMs);
+        const durMin = (endMs - startMs) / 60000;
         return {
-          date,
-          label: seoulDateLabel(gridStartMs),
-          gridStartMs,
-          gridEndMs,
-          blocks: raw as Block[],
+          item: it,
+          startMs,
+          endMs,
+          topPx: ((startMs - gridStartMs) / 60000) * PX_PER_MIN,
+          heightPx: Math.max(MIN_BLOCK_PX, durMin * PX_PER_MIN),
         };
       });
-  }, [items]);
+      layoutBlocks(raw);
+      const transports: Transport[] = legList.map((l) => ({
+        leg: l.leg,
+        crossesMidnight: l.cross,
+        topPx: ((l.startMs - gridStartMs) / 60000) * PX_PER_MIN,
+        heightPx: Math.max(MIN_BLOCK_PX, ((l.endMs - l.startMs) / 60000) * PX_PER_MIN),
+      }));
+      return {
+        date,
+        label: seoulDateLabel(gridStartMs),
+        gridStartMs,
+        gridEndMs,
+        blocks: raw as Block[],
+        transports,
+      };
+    });
+  }, [items, legs]);
 
   const selectedItem = items.find((it) => it.id === selected) ?? null;
   const multiDay = groups.length > 1;
@@ -185,6 +259,39 @@ export function TimelineCalendar({
                   </div>
                 );
               })}
+
+              {/* 便（移動）バンド：背面に全幅で表示 */}
+              {g.transports.map((t, i) => (
+                <div
+                  key={`leg-${i}`}
+                  className="absolute overflow-hidden rounded-[8px] border border-dashed border-[var(--accent)] bg-[var(--accent-light)]"
+                  style={{
+                    top: t.topPx,
+                    height: t.heightPx - 2,
+                    left: GUTTER,
+                    right: 0,
+                  }}
+                >
+                  <div className="px-2.5 py-1">
+                    <p className="text-[12px] font-bold leading-[1.2] text-[var(--accent-dark)]">
+                      {t.leg.emoji} {t.leg.kind}
+                      {t.leg.name ? ` ${t.leg.name}` : ""}
+                      {t.leg.isLast && (
+                        <span className="ml-1 align-middle text-[9px] font-bold text-[var(--accent2)]">
+                          最終
+                        </span>
+                      )}
+                    </p>
+                    <p className="mt-0.5 text-[10px] tabular-nums text-[var(--accent-dark)]">
+                      {t.leg.fromLabel} {t.leg.fromTime} → {t.leg.toLabel}{" "}
+                      {t.leg.toTime}
+                      {(t.leg.nextDay || t.crossesMidnight) && (
+                        <sup className="text-[var(--accent)]">+1</sup>
+                      )}
+                    </p>
+                  </div>
+                </div>
+              ))}
 
               {/* 予定ブロック */}
               {g.blocks.map((b) => {
