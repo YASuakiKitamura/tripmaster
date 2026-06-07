@@ -4,6 +4,7 @@ import Link from "next/link";
 import { PERSPECTIVES } from "../lib/data";
 import { usePerspective } from "../lib/usePerspective";
 import { useResolvedTrip } from "../lib/useResolvedTrip";
+import { useItinerary } from "../lib/useItinerary";
 import type { Leg } from "../lib/resolveTrip";
 import { NowCard } from "./NowCard";
 import { NextTodoCard } from "./NextTodoCard";
@@ -40,6 +41,7 @@ function LegRow({ leg }: { leg: Leg }) {
 export function HomeClient() {
   const [perspective, setPerspective] = usePerspective();
   const trip = useResolvedTrip();
+  const { itinerary } = useItinerary(trip.id, trip.itinerary);
   const cards = trip.nav.filter((n) => n.href !== "/");
   const seatInfo = trip.legs.outbound.seatInfo;
 
@@ -64,15 +66,15 @@ export function HomeClient() {
           </select>
         </label>
         <ReplanButton
-          itinerary={trip.itinerary}
+          itinerary={itinerary}
           tripId={trip.id}
           perspective={perspective}
         />
       </div>
 
-      <NowCard itinerary={trip.itinerary} perspective={perspective} />
+      <NowCard itinerary={itinerary} perspective={perspective} />
       <NextTodoCard
-        itinerary={trip.itinerary}
+        itinerary={itinerary}
         tripId={trip.id}
         perspective={perspective}
       />

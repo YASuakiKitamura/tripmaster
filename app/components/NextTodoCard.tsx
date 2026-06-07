@@ -100,7 +100,7 @@ export function NextTodoCard({
 
   if (now === null || !target) return null;
 
-  const c = WHO_COLORS[target.who];
+  const c = WHO_COLORS[target.who] ?? WHO_COLORS["夫婦"];
 
   return (
     <div className="mt-3 rounded-[14px] border border-[var(--border)] bg-white p-4 shadow-[var(--shadow)]">

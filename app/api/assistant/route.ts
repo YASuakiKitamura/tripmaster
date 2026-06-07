@@ -54,6 +54,9 @@ export async function POST(req: Request) {
     if (body.mode === "replan") {
       return NextResponse.json({ text: await replan(trip, body) });
     }
+    if (body.mode === "edit") {
+      return NextResponse.json(await edit(trip, body));
+    }
     return NextResponse.json({ error: "unknown mode" }, { status: 400 });
   } catch (err) {
     if (err instanceof Anthropic.APIError) {
@@ -105,6 +108,100 @@ async function nextTodo(
     ],
   });
   return extractText(message);
+}
+
+// 旅程編集モード: 変更内容を受け取り「操作リスト(ops)」だけを構造化出力で返す。
+// 全文JSONを再生成しないので入出力ともトークンが小さい。適用はクライアント側。
+const EDIT_SCHEMA = {
+  type: "object",
+  additionalProperties: false,
+  properties: {
+    summary: {
+      type: "string",
+      description: "変更内容の一言サマリ（日本語・1文）。間に合わない懸念があれば必ず触れる。",
+    },
+    ops: {
+      type: "array",
+      description: "旅程への操作。変わるフィールドだけを最小限に含める。",
+      items: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          op: { type: "string", enum: ["add", "update", "remove"] },
+          id: {
+            type: "string",
+            description: "update/remove の対象カードid。既存カードのidを正確に使う。",
+          },
+          title: { type: "string" },
+          emoji: { type: "string", description: "絵文字1つ" },
+          who: { type: "string", description: "担当（既存の値に合わせる）" },
+          notes: { type: "string" },
+          start: { type: "string", description: "開始 HH:MM" },
+          end: { type: "string", description: "終了 HH:MM" },
+          date: { type: "string", description: "YYYY-MM-DD（当日のみなら省略可）" },
+          after: {
+            type: "string",
+            description: "add時の並び順ヒント。直後に置きたい既存カードのid。",
+          },
+        },
+        required: ["op"],
+      },
+    },
+  },
+  required: ["summary", "ops"],
+} as const;
+
+async function edit(
+  trip: ResolvedTrip,
+  body: {
+    change?: string;
+    currentTime?: string;
+    perspective?: string;
+    itinerary?: { id: string; start: string; end: string; who: string; title: string }[];
+  },
+): Promise<{ summary: string; ops: unknown[] }> {
+  const change = (body.change ?? "").slice(0, 1000);
+  if (!change.trim()) return { summary: "", ops: [] };
+  const persp = PERSPECTIVE_NOTE[body.perspective ?? "混合"] ?? "";
+  const list = (body.itinerary ?? [])
+    .slice(0, 40)
+    .map((it) => `${it.id} | ${it.start}-${it.end} [${it.who}] ${it.title}`)
+    .join("\n");
+
+  const message = await anthropic.messages.create({
+    model: MODEL,
+    max_tokens: 1500,
+    thinking: { type: "adaptive" },
+    output_config: {
+      effort: "medium",
+      format: { type: "json_schema", schema: EDIT_SCHEMA },
+    },
+    system:
+      `あなたは旅程エディタです。利用者の変更要望を、現在の旅程に対する最小限の「操作リスト」に変換します。` +
+      `操作は add（新規追加）/ update（既存カードの一部変更）/ remove（削除）の3種。` +
+      `既存カードを変えるときは必ず正しい id を指定し、変わるフィールドだけ含める（時刻だけ変えるなら start/end だけ）。` +
+      `この旅の最重要制約（最終便/最終列車）を必ず守り、間に合わない恐れがあれば summary で警告する。` +
+      `現実的でない時刻にしない。who は既存の値に合わせる。余計な操作はしない。\n\n` +
+      buildTripContext(trip),
+    messages: [
+      {
+        role: "user",
+        content:
+          `${persp}以下の変更を反映する操作リストを作ってください。\n` +
+          `現在時刻: ${body.currentTime ?? "不明"}\n` +
+          `変更・状況: ${change}\n\n` +
+          `現在の旅程（id | 時刻 | 担当 | 内容）:\n${list || "（情報なし）"}`,
+      },
+    ],
+  });
+
+  const raw = extractText(message);
+  try {
+    const parsed = JSON.parse(raw) as { summary?: string; ops?: unknown[] };
+    return { summary: parsed.summary ?? "", ops: Array.isArray(parsed.ops) ? parsed.ops : [] };
+  } catch {
+    return { summary: "提案の解釈に失敗しました。表現を変えて再度お試しください。", ops: [] };
+  }
 }
 
 async function replan(
