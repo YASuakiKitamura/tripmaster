@@ -1,16 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { PERSPECTIVES } from "../lib/data";
+import { useMemo, useState } from "react";
+import { PERSPECTIVES, itineraryStartMs } from "../lib/data";
 import { usePerspective } from "../lib/usePerspective";
 import { useResolvedTrip } from "../lib/useResolvedTrip";
 import { useItinerary } from "../lib/useItinerary";
 import type { Leg } from "../lib/resolveTrip";
-import { useNow } from "../lib/useNow";
+import { useNow, seoulDateString } from "../lib/useNow";
 import { NowCard } from "./NowCard";
 import { NextTodoCard } from "./NextTodoCard";
 import { HomewardCountdown } from "./HomewardCountdown";
 import { ReplanButton } from "./ReplanButton";
+import { NowOverridePanel } from "./NowOverridePanel";
 import { WeatherCard } from "./WeatherCard";
 import { Tag } from "./ui";
 
@@ -46,6 +48,14 @@ export function HomeClient() {
   const now = useNow();
   const { itinerary } = useItinerary(trip.id, trip.itinerary);
   const cards = trip.nav.filter((n) => n.href !== "/");
+  const [clockOpen, setClockOpen] = useState(false);
+  const defaultDate = useMemo(
+    () =>
+      trip.itinerary.length
+        ? seoulDateString(itineraryStartMs(trip.itinerary[0]))
+        : "2026-06-17",
+    [trip],
+  );
   const seatInfo = trip.legs.outbound.seatInfo;
 
   return (
@@ -68,11 +78,20 @@ export function HomeClient() {
             ))}
           </select>
         </label>
-        <ReplanButton
-          itinerary={itinerary}
-          tripId={trip.id}
-          perspective={perspective}
-        />
+        <div className="flex items-center gap-1.5">
+          <button
+            onClick={() => setClockOpen(true)}
+            title="現在時刻を仮設定（デモ用）"
+            className="rounded-full border border-[var(--border)] bg-white px-2.5 py-1 text-[11px] font-bold text-[var(--text-sub)] active:bg-[var(--bg)]"
+          >
+            🕐
+          </button>
+          <ReplanButton
+            itinerary={itinerary}
+            tripId={trip.id}
+            perspective={perspective}
+          />
+        </div>
       </div>
 
       <NowCard itinerary={itinerary} perspective={perspective} />
@@ -216,6 +235,12 @@ export function HomeClient() {
           </div>
         </div>
       )}
+
+      <NowOverridePanel
+        open={clockOpen}
+        onClose={() => setClockOpen(false)}
+        defaultDate={defaultDate}
+      />
     </div>
   );
 }
