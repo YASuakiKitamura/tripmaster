@@ -8,10 +8,11 @@ import {
 } from "../lib/data";
 import type { ItineraryItem } from "../lib/types";
 import type { EditOp } from "../lib/itinerary";
-import { checkLastLegConflicts } from "../lib/itinerary";
+import { checkLastLegConflicts, shiftAfterOps } from "../lib/itinerary";
 import { usePerspective } from "../lib/usePerspective";
 import { useResolvedTrip } from "../lib/useResolvedTrip";
 import { useItinerary } from "../lib/useItinerary";
+import { useActuals } from "../lib/useActuals";
 import { useNow, formatSeoulClock, seoulDateString } from "../lib/useNow";
 import { TimelineCalendar } from "../components/TimelineCalendar";
 import { AiEditPanel } from "../components/AiEditPanel";
@@ -25,6 +26,7 @@ export default function TimelinePage() {
     trip.id,
     trip.itinerary,
   );
+  const { done, toggle } = useActuals(trip.id);
   const [filter, setFilter] = usePerspective();
   const [aiOpen, setAiOpen] = useState(false);
   const [clockOpen, setClockOpen] = useState(false);
@@ -65,6 +67,16 @@ export default function TimelinePage() {
 
   const deleteItem = (it: ItineraryItem) => {
     if (confirm(`「${it.title}」を削除しますか？`)) apply([{ op: "remove", id: it.id }]);
+  };
+
+  const shiftAfter = (it: ItineraryItem, deltaMin: number) => {
+    const ops = shiftAfterOps(itinerary, it, deltaMin * 60000);
+    if (!ops.length) {
+      alert("ずらす対象（この予定より後）がありません。");
+      return;
+    }
+    if (confirm(`「${it.title}」より後の ${ops.length} 件を ${deltaMin > 0 ? "+" : ""}${deltaMin}分 ずらします。よろしいですか？`))
+      apply(ops);
   };
 
   return (
@@ -171,8 +183,11 @@ export default function TimelinePage() {
           legs={trip.legs}
           tripId={trip.id}
           now={now}
+          completed={done}
           onEdit={(it) => setForm({ mode: "edit", item: it })}
           onDelete={deleteItem}
+          onToggleComplete={toggle}
+          onShiftAfter={shiftAfter}
         />
       </div>
 

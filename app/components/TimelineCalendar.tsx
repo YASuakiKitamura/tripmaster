@@ -96,15 +96,21 @@ export function TimelineCalendar({
   legs,
   tripId,
   now,
+  completed,
   onEdit,
   onDelete,
+  onToggleComplete,
+  onShiftAfter,
 }: {
   items: ItineraryItem[];
   legs?: { outbound: Leg; return: Leg };
   tripId: string;
   now: number | null;
+  completed: Set<string>;
   onEdit: (item: ItineraryItem) => void;
   onDelete: (item: ItineraryItem) => void;
+  onToggleComplete: (id: string) => void;
+  onShiftAfter: (item: ItineraryItem, deltaMin: number) => void;
 }) {
   const [selected, setSelected] = useState<string | null>(null);
 
@@ -301,6 +307,7 @@ export function TimelineCalendar({
                   now !== null && now >= b.startMs && now < b.endMs;
                 const isPast = now !== null && now >= b.endMs;
                 const isAdded = it.id.startsWith("x-");
+                const isDone = completed.has(it.id);
                 const compact = b.heightPx < 56;
                 const leftCalc = `calc(${GUTTER}px + (100% - ${GUTTER}px) * ${b.lane} / ${b.laneCount})`;
                 const widthCalc = `calc((100% - ${GUTTER}px) / ${b.laneCount} - 4px)`;
@@ -312,7 +319,7 @@ export function TimelineCalendar({
                       isNow
                         ? "border-[var(--accent)] ring-1 ring-[var(--accent)]"
                         : "border-[var(--border)]"
-                    } ${isPast ? "opacity-55" : ""}`}
+                    } ${isPast || isDone ? "opacity-55" : ""}`}
                     style={{
                       top: b.topPx,
                       height: b.heightPx - 2,
@@ -328,8 +335,9 @@ export function TimelineCalendar({
                       <p
                         className={`font-bold leading-[1.2] ${
                           compact ? "text-[12px] line-clamp-1" : "text-[13px] line-clamp-2"
-                        }`}
+                        } ${isDone ? "line-through" : ""}`}
                       >
+                        {isDone ? "✅ " : ""}
                         {it.emoji} {it.title}
                         {isAdded && (
                           <span className="ml-1 align-middle text-[9px] font-bold text-[var(--tag-green)]">
@@ -372,6 +380,7 @@ export function TimelineCalendar({
         <DetailSheet
           item={selectedItem}
           tripId={tripId}
+          done={completed.has(selectedItem.id)}
           onClose={() => setSelected(null)}
           onEdit={() => {
             setSelected(null);
@@ -380,6 +389,11 @@ export function TimelineCalendar({
           onDelete={() => {
             setSelected(null);
             onDelete(selectedItem);
+          }}
+          onToggleComplete={() => onToggleComplete(selectedItem.id)}
+          onShiftAfter={(delta) => {
+            onShiftAfter(selectedItem, delta);
+            setSelected(null);
           }}
         />
       )}
@@ -390,18 +404,25 @@ export function TimelineCalendar({
 function DetailSheet({
   item,
   tripId,
+  done,
   onClose,
   onEdit,
   onDelete,
+  onToggleComplete,
+  onShiftAfter,
 }: {
   item: ItineraryItem;
   tripId: string;
+  done: boolean;
   onClose: () => void;
   onEdit: () => void;
   onDelete: () => void;
+  onToggleComplete: () => void;
+  onShiftAfter: (deltaMin: number) => void;
 }) {
   const c = WHO_COLORS[item.who] ?? WHO_COLORS["夫婦"];
   const pl = getPlaceLink(tripId, item.id);
+  const shifts = [-30, -15, 15, 30, 60];
   return (
     <div
       className="fixed inset-0 z-[100] flex items-end justify-center bg-black/40 sm:items-center"
@@ -451,6 +472,34 @@ function DetailSheet({
             )}
           </div>
         )}
+        {/* 実績打刻＆以降のずらし */}
+        <div className="mt-3 border-t border-dashed border-[var(--border)] pt-3">
+          <button
+            onClick={onToggleComplete}
+            className={`w-full rounded-[10px] border py-2 text-[13px] font-bold active:opacity-90 ${
+              done
+                ? "border-[var(--border)] bg-[var(--bg)] text-[var(--text-sub)]"
+                : "border-[var(--tag-green)] bg-white text-[var(--tag-green)]"
+            }`}
+          >
+            {done ? "✅ 完了済み（取り消す）" : "✓ 完了にする"}
+          </button>
+          <p className="mt-3 text-[11px] font-bold text-[var(--text-sub)]">
+            押した分だけ、この予定より後ろを全部ずらす
+          </p>
+          <div className="mt-1 flex flex-wrap gap-1.5">
+            {shifts.map((d) => (
+              <button
+                key={d}
+                onClick={() => onShiftAfter(d)}
+                className="rounded-full border border-[var(--border)] bg-white px-3 py-1.5 text-[12px] font-bold tabular-nums text-[var(--accent)] active:bg-[var(--bg)]"
+              >
+                {d > 0 ? `+${d}` : d}分
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className="mt-3 flex gap-2 border-t border-dashed border-[var(--border)] pt-3">
           <button
             onClick={onEdit}

@@ -3,7 +3,7 @@
 // 追加(added)・上書き(updated)・削除(removed) の差分だけ持ち、表示時に合成する。
 // 純データ層（クライアント/サーバ両方から import 可能）。
 import type { ItineraryItem, Who } from "./types";
-import { itineraryStartMs } from "./data";
+import { itineraryStartMs, itineraryEndMs } from "./data";
 
 /** baseカードへの部分上書き。time も部分指定できる。 */
 export type ItemPatch = Partial<Omit<ItineraryItem, "time">> & {
@@ -176,6 +176,50 @@ export function applyOps(
   next.rev += 1;
   next.updatedAt = nowIso;
   return next;
+}
+
+function msToSeoulHHMM(ms: number): string {
+  return new Intl.DateTimeFormat("ja-JP", {
+    timeZone: "Asia/Seoul",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).format(new Date(ms));
+}
+function msToSeoulDate(ms: number): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Seoul",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date(ms));
+}
+
+/**
+ * pivot 以降（pivot より後に開始する予定）を deltaMs だけ前後にずらす update 操作列を返す。
+ * 実績が押したときの「以降を繰り下げ」に使う。日跨ぎは date も更新する。
+ */
+export function shiftAfterOps(
+  itinerary: ItineraryItem[],
+  pivot: ItineraryItem,
+  deltaMs: number,
+): EditOp[] {
+  if (!deltaMs) return [];
+  const pivotStart = itineraryStartMs(pivot);
+  const ops: EditOp[] = [];
+  for (const it of itinerary) {
+    if (itineraryStartMs(it) <= pivotStart) continue; // pivot より後だけ
+    const ns = itineraryStartMs(it) + deltaMs;
+    const ne = itineraryEndMs(it) + deltaMs;
+    ops.push({
+      op: "update",
+      id: it.id,
+      start: msToSeoulHHMM(ns),
+      end: msToSeoulHHMM(ne),
+      date: msToSeoulDate(ns),
+    });
+  }
+  return ops;
 }
 
 /** 復路（最終便/最終列車）に抵触しそうな予定がないか、軽くクライアント側で検算する。 */

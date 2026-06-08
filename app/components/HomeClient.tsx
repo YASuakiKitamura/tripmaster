@@ -6,8 +6,10 @@ import { usePerspective } from "../lib/usePerspective";
 import { useResolvedTrip } from "../lib/useResolvedTrip";
 import { useItinerary } from "../lib/useItinerary";
 import type { Leg } from "../lib/resolveTrip";
+import { useNow } from "../lib/useNow";
 import { NowCard } from "./NowCard";
 import { NextTodoCard } from "./NextTodoCard";
+import { HomewardCountdown } from "./HomewardCountdown";
 import { ReplanButton } from "./ReplanButton";
 import { WeatherCard } from "./WeatherCard";
 import { Tag } from "./ui";
@@ -41,6 +43,7 @@ function LegRow({ leg }: { leg: Leg }) {
 export function HomeClient() {
   const [perspective, setPerspective] = usePerspective();
   const trip = useResolvedTrip();
+  const now = useNow();
   const { itinerary } = useItinerary(trip.id, trip.itinerary);
   const cards = trip.nav.filter((n) => n.href !== "/");
   const seatInfo = trip.legs.outbound.seatInfo;
@@ -78,6 +81,7 @@ export function HomeClient() {
         tripId={trip.id}
         perspective={perspective}
       />
+      <HomewardCountdown trip={trip} itinerary={itinerary} now={now} />
 
       {/* 当日の天気 */}
       {trip.weather.length > 0 && <WeatherCard points={trip.weather} />}
