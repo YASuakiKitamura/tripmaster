@@ -1,3 +1,7 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
 @AGENTS.md
 
 # PP添乗員（旅行ガイド Web アプリ）
@@ -8,6 +12,15 @@
 - 本番: Vercel（https://seoul-2026-eight.vercel.app）。`primecool.com` 限定の Google 認証。
 - ブランド名: **PP添乗員**（ファビコンは「PT」ロゴ）。
 - 元の企画メモ・原データは `docs/`（`docs/CLAUDE.md` 等）に保全。
+
+## コマンド
+- `npm run dev` … 開発サーバ（http://localhost:3000）。
+- `npm run build` … 本番ビルド（Turbopack）。**型チェックはこのビルドに内包**（型エラーで失敗）。
+- `npm start` … ビルド済みを本番モードで起動。
+- `npx tsc --noEmit -p tsconfig.json` … 単体の型チェック（編集後の素早い確認に推奨）。
+- `vercel --prod` … 本番デプロイ（環境変数は Vercel 側に設定済み）。
+- **テスト/Lint のセットアップは無い**（テストランナー・ESLint設定なし）。検証は「型チェック → build → 実機で目視」。
+  位置情報・通知・現在時刻ラインの確認には、ホーム/タイムラインの 🕐（TIMENOW 仮設定）で「いま」を当日にずらす。
 
 ## 技術スタック
 - Next.js 16（App Router, Turbopack）+ React 19 + TypeScript
@@ -97,5 +110,5 @@
 - 名前表記は **靖晃**・**ひとみ**。日本語メイン、韓国語は補助。
 
 ## 運用メモ
-- ビルド/デプロイ: `npm run build` → `vercel --prod`（環境変数はVercel側に設定済み）。
+- デプロイは `vercel --prod`（→「コマンド」節）。本番URLは固定エイリアス `seoul-2026-eight.vercel.app`。
 - Anthropic API キーは平文で共有された経緯があり、本番前のローテーション推奨。
