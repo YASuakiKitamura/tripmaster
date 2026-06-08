@@ -15,7 +15,8 @@
 - 認証: Auth.js v5（`next-auth@beta`）+ Google Provider
 - AI: `@anthropic-ai/sdk`、モデル `claude-opus-4-8`（**サーバー側のみ**）
 - ホスティング: Vercel（本番）/ Docker 自前ホスト（`Dockerfile`・`docs/docker.md`）
-- データ: 静的JSON（`app/data/trips/<id>.json`）＋ クライアント localStorage。DB不要。
+- データ: 静的JSON（`app/data/trips/<id>.json`）がベース（不変）。当日の編集は**差分オーバーレイ**で持ち、
+  共有ストア（Upstash Redis・**任意**）＋ localStorage に保存。DBは必須でない。
 
 > ⚠️ Next.js 16 は破壊的変更あり。middleware は **`proxy.ts`** に改名。`params`/`searchParams` は Promise。
 > 迷ったら `node_modules/next/dist/docs/` を参照（`AGENTS.md`）。
@@ -27,6 +28,8 @@
 - `app/api/auth/[...nextauth]/route.ts`、ログインは `app/login`。
 - 必須環境変数: `AUTH_SECRET` / `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` / `ANTHROPIC_API_KEY`
   （Vercel env と `.env.local`。雛形は `.env.example`）。
+- 任意: `KV_REST_API_URL` / `KV_REST_API_TOKEN`（Upstash Redis）。旅程編集の2台共有に使用。
+  未設定なら編集は端末ローカル(localStorage)のみで動作（アプリは正常稼働）。
 
 ## 複数旅アーキテクチャ（重要）
 構造の違う旅を共通モデルに正規化して描画する。
@@ -52,19 +55,39 @@
 フォントは Montserrat（Gotham代替, Bold基調）＋ Noto Sans JP/KR。
 
 ## ページ / ナビ
-`/`（ホーム=現在地・次ToDo・天気・移動・宿・便利アプリ・要確認・豆知識）、`/timeline`、
-`/phrases`（ソウルのみ）、`/stores`、`/payment`、`/toilets`、`/checklist`（ソウルのみ）、`/emergency`。
+`/`（ホーム=現在地・次ToDo・**最終便カウントダウン**・天気・移動・宿・便利アプリ・要確認・豆知識）、
+`/timeline`（**カレンダー型**）、`/phrases`（ソウルのみ）、`/stores`、`/payment`、
+`/toilets`（**現在地で近い順**対応）、`/checklist`（ソウルのみ）、`/emergency`。
 ナビは `resolveTrip(id).nav` で旅ごとに出し分け（姫路はフレーズ/準備を非表示）。
+
+## 当日ライブ編集＆アジャイル機能（重要）
+旅程を当日その場で動的に変更できる。ベースJSONは不変、編集は差分で重ねる。
+- **差分オーバーレイ** `app/lib/itinerary.ts`：`ItineraryOverlay`(added/updated/removed＋rev)、
+  `applyOverlay`/`applyOps`(EditOp列→差分)/`shiftAfterOps`(以降ずらし)/`checkLastLegConflicts`(最終便検算)。純データ層。
+- **共有＆同期** `app/lib/useItinerary.ts`：localStorage即描画→`/api/itinerary`(KV)取得で収束、楽観更新→PUT。
+  `app/lib/kv.ts`＋`app/api/itinerary/route.ts`(GET/PUT・auth必須・revで楽観ロック409・KV未設定でも動作)。
+  timeline と HomeClient がこれ経由（NowCard/NextTodoCard 等は props で受ける）。
+- **カレンダー型タイムライン** `app/components/TimelineCalendar.tsx`：時間比例の高さ(最低46px,1.7px/分)、
+  重なりは横レーン、現在時刻ライン、**往復便も時間ブロック表示**(便は深夜便の日付も実日付で判定)。
+  タップで詳細シート（編集/削除/完了/±分ずらし/地図）。
+- **編集UI**：`AiEditPanel.tsx`(AIに依頼→差分プレビュー→適用)、`ItineraryItemForm.tsx`(手動add/edit)。
+- **実績** `app/lib/useActuals.ts`（完了マーク・端末ローカル）。
+- **最終便カウントダウン＋撤退アラート** `HomewardCountdown.tsx`（Home。出発6h前から、空港着目安超過で赤＋通知）。
+- **現在地** `app/lib/useGeo.ts`＋`toiletGeo.ts`（トイレを直線距離で近い順）。
+- **疑似時刻(TIMENOW)**：`useNow` を実時刻との差分(offset)方式に。`setNowOverride`/`useNowOffset`、
+  `NowOverridePanel`(ホーム/タイムラインの🕐)。デモ・動作確認用に「いま」を仮設定できる。
 
 ## AI 機能（`/api/assistant`、POST、認証必須）
 - `mode: "next-todo"` … 前後の予定からフレンドリーな案内文（`NextTodoCard`）。
-- `mode: "replan"` … 予定変更を渡し最終便制約を踏まえ組み直し（`ReplanButton`＝「予定変更・相談」）。
+- `mode: "replan"` … 予定変更を渡し最終便制約を踏まえ文章で組み直し提案（`ReplanButton`）。
+- `mode: "edit"` … 変更要望を**操作リスト(ops)だけ**構造化出力で返す（全文JSON再生成せずトークン小。`AiEditPanel`）。
 - 旅ごとのコンテキスト（`buildTripContext` が `ResolvedTrip` から生成）。キーはブラウザに出さない。
 
 ## 補助データ
 - `app/lib/phrases.ts`（韓国語フレーズ。ソウル専用）。
 - `app/lib/placeLinks.ts`（行程ID→地図検索クエリ＋公式リンク。ソウル=NAVER / 国内=Google）。
-- `app/lib/useNow.ts`（現在時刻、Asia/Seoul表示）、`data.ts`（時刻計算・WHO色・パースペクティブ）。
+- `app/lib/useNow.ts`（現在時刻 Asia/Seoul・TIMENOW仮設定・`seoulWallToMs`等）、
+  `data.ts`（時刻計算・WHO色・パースペクティブ）。
 
 ## 重要な決定事項（ソウル）
 - 復路 MM808(22:35) は**最終便**。ピーチ締切は出発50分前。19:36 AREX が本線。
