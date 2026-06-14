@@ -236,6 +236,35 @@ export function HomeClient() {
         </div>
       )}
 
+      {/* 予約・公式リンク（付録：探しやすいよう下部に直リンク） */}
+      {trip.bookings && trip.bookings.length > 0 && (
+        <div className="mt-5">
+          <h3 className="mb-2 text-[13px] font-bold text-[var(--text-sub)]">
+            🎫 予約・公式リンク
+          </h3>
+          <div className="space-y-2">
+            {trip.bookings.map((b) => (
+              <a
+                key={b.url}
+                href={b.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block rounded-[12px] border border-[var(--border)] bg-white p-3 shadow-[var(--shadow)] active:scale-[0.99] active:shadow-[var(--shadow-hover)]"
+              >
+                <p className="text-[13px] font-bold text-[var(--accent)]">
+                  🔗 {b.label}
+                </p>
+                {b.note && (
+                  <p className="mt-0.5 text-[12px] leading-[1.6] text-[var(--text-sub)]">
+                    {b.note}
+                  </p>
+                )}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
       <NowOverridePanel
         open={clockOpen}
         onClose={() => setClockOpen(false)}

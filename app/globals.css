@@ -32,6 +32,15 @@
   --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
+/* 沖縄：海の青＋サンゴ/ハイビスカスの差し色 */
+:root[data-trip="okinawa-2026"] {
+  --bg: #f4fbfc;
+  --accent: #0091a7; /* エメラルドの海（主色） */
+  --accent-light: #d8f3f6;
+  --accent-dark: #006375;
+  --accent2: #ef5a76; /* ハイビスカス（差し色） */
+}
+
 @theme inline {
   --color-bg: var(--bg);
   --color-card: var(--card);

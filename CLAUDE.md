@@ -7,7 +7,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 # PP添乗員（旅行ガイド Web アプリ）
 
 スマホ向けの旅行ガイド。複数の旅を切り替えられ、AI が当日の行動を案内する。
-最初の旅は北邑夫婦の韓国日帰り（弾丸ソウル 2026.06.17）。2件目は姫路・岡山 1泊2日（2026.07.29–30）。
+収録の旅（北邑夫婦）: ①韓国日帰り（弾丸ソウル 2026.06.17）②姫路・岡山 1泊2日（2026.07.29–30）
+③沖縄ドライブ 2泊3日（2026.09.29–10.01・レンタカー）。
 
 - 本番: Vercel（https://seoul-2026-eight.vercel.app）。`primecool.com` 限定の Google 認証。
 - ブランド名: **PP添乗員**（ファビコンは「PT」ロゴ）。
@@ -48,30 +49,41 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 構造の違う旅を共通モデルに正規化して描画する。
 
 - **旅レジストリ** `app/lib/trips.ts`: `TripMeta`（id/name/destination/emoji/dateLabel/status）。
-- **旅データ** `app/data/trips/<id>.json`（seoul-2026.json / himeji-okayama-2026.json）。
-- **正規化** `app/lib/resolveTrip.ts`: `resolveTrip(id)` が両JSONを共通 `ResolvedTrip` に変換
+- **旅データ** `app/data/trips/<id>.json`（seoul-2026 / himeji-okayama-2026 / okinawa-2026）。
+- **正規化** `app/lib/resolveTrip.ts`: `resolveTrip(id)` が各JSONを共通 `ResolvedTrip` に変換
   （legs / stores+highlights / payment.methods+currency / emergency.sections / toilets /
   weather / apps / reminders / confirmList / nav / hasPhrases・hasChecklist）。
   クライアントは `useResolvedTrip()`、サーバー(API)は `resolveTrip(id)`。
+  - ソウル(海外便/フレーズ/入国)は `resolveSeoul`。**国内旅(姫路・沖縄)は構造が同じなので
+    `resolveDomestic(raw, id)` で共用**（id→raw は `DOMESTIC` マップで引く）。
+    旅ごとに違う付帯情報（initialCash / reminders / apps / toilets / weather / bookings）は
+    **各 JSON の `extras` キー**に入っており、リゾルバはそれを読むだけ（コードにベタ書きしない）。
 - **選択中の旅** `app/lib/useTrip.ts`（`useSyncExternalStore`＋共有ストアで**同一タブ内も即時同期**）。
 - `TripSwitcher`（ヘッダーの「🧭 旅の変更」ボタン）/ `TripGate`（coming-soon は準備中画面）/
   `ThemeApplier`（`<html data-trip>` とステータスバー色を旅に追従）。
 
 ### 新しい旅の追加手順
-1. `app/data/trips/<id>.json` を用意（生成プロンプトは `docs/himeji-json-prompt.md`）。
+1. `app/data/trips/<id>.json` を用意（国内旅は姫路型スキーマ。生成プロンプトは `docs/himeji-json-prompt.md`）。
+   レンタカー旅でも transport.outbound/return は往復**フライト**、レンタカー貸出/返却は itinerary 項目で表現。
 2. `app/lib/trips.ts` にエントリ追加、`status: "ready"`。
-3. `app/lib/resolveTrip.ts` にその旅のマッピング（必要なら `placeLinks.ts` / 配色テーマも）。
+3. **付帯情報は JSON 側の `extras` キー**に入れる（initialCash / reminders / apps / toilets / weather。
+   ソウル等の海外旅は現金が payment 側にあるため initialCash の代わりに bookings）。変換コードは触らない。
+4. `app/lib/resolveTrip.ts`:
+   - **国内旅**なら JSON を import して `DOMESTIC` マップに1エントリ足すだけ（共通変換は書かない）。
+     旅ごとの差分は JSON の `extras` に集約済みなので、リゾルバ側のコード追加は不要。
+   - 海外便など構造が違う旅は専用 resolver を追加。
+5. 任意: `placeLinks.ts`（行程ID→地図クエリ）／`globals.css` に配色テーマ。
 
 ## 配色テーマ（旅ごと）
-`app/globals.css` の CSS変数で定義。`:root` = 早稲田の臙脂（国内既定）、
-`:root[data-trip="seoul-2026"]` = 青・白・赤（韓国）。差し色は `--accent2`（韓国=赤）。
-フォントは Montserrat（Gotham代替, Bold基調）＋ Noto Sans JP/KR。
+`app/globals.css` の CSS変数で定義。`:root` = 早稲田の臙脂（国内既定・姫路）、
+`:root[data-trip="seoul-2026"]` = 青・白・赤（韓国）、`:root[data-trip="okinawa-2026"]` = 海のエメラルド＋ハイビスカス。
+差し色は `--accent2`。フォントは Montserrat（Gotham代替, Bold基調）＋ Noto Sans JP/KR。
 
 ## ページ / ナビ
 `/`（ホーム=現在地・次ToDo・**最終便カウントダウン**・天気・移動・宿・便利アプリ・要確認・豆知識）、
-`/timeline`（**カレンダー型**）、`/phrases`（ソウルのみ）、`/stores`、`/payment`、
+`/timeline`（**カレンダー型**・詳細シートに写真メモ）、`/phrases`（ソウルのみ）、`/stores`（店舗ごとに写真メモ）、`/payment`、
 `/toilets`（**現在地で近い順**対応）、`/checklist`（ソウルのみ）、`/emergency`。
-ナビは `resolveTrip(id).nav` で旅ごとに出し分け（姫路はフレーズ/準備を非表示）。
+ナビは `resolveTrip(id).nav` で旅ごとに出し分け（国内＝姫路・沖縄はフレーズ/準備を非表示）。
 
 ## 当日ライブ編集＆アジャイル機能（重要）
 旅程を当日その場で動的に変更できる。ベースJSONは不変、編集は差分で重ねる。
@@ -85,6 +97,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   タップで詳細シート（編集/削除/完了/±分ずらし/地図）。
 - **編集UI**：`AiEditPanel.tsx`(AIに依頼→差分プレビュー→適用)、`ItineraryItemForm.tsx`(手動add/edit)。
 - **実績** `app/lib/useActuals.ts`（完了マーク・端末ローカル）。
+- **写真メモ** `app/lib/usePhotos.ts`＋`app/components/PhotoStrip.tsx`：店舗・スポットに写真を添付。
+  **端末ローカル(localStorage)のみ・共有なし**。撮影/選択した画像を `downscaleImage`(長辺1024px・JPEG q0.6)で
+  縮小して data URL 保存。id名前空間は `store:<id>`（/stores）/ `item:<id>`（タイムライン詳細シート）。
+  容量超過は QuotaExceededError を投げ、UIで通知。たくさん残す/2台共有が必要なら Vercel Blob へ要移行。
 - **最終便カウントダウン＋撤退アラート** `HomewardCountdown.tsx`（Home。出発6h前から、空港着目安超過で赤＋通知）。
 - **現在地** `app/lib/useGeo.ts`＋`toiletGeo.ts`（トイレを直線距離で近い順）。
 - **疑似時刻(TIMENOW)**：`useNow` を実時刻との差分(offset)方式に。`setNowOverride`/`useNowOffset`、
@@ -98,7 +114,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 補助データ
 - `app/lib/phrases.ts`（韓国語フレーズ。ソウル専用）。
-- `app/lib/placeLinks.ts`（行程ID→地図検索クエリ＋公式リンク。ソウル=NAVER / 国内=Google）。
+- `app/lib/placeLinks.ts`（行程ID→地図検索クエリ＋公式リンク。ソウル=NAVER / 国内(姫路・沖縄)=Google。`getPlaceLink`はid別テーブル）。
 - `app/lib/useNow.ts`（現在時刻 Asia/Seoul・TIMENOW仮設定・`seoulWallToMs`等）、
   `data.ts`（時刻計算・WHO色・パースペクティブ）。
 

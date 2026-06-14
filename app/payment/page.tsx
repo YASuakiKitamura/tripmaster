@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useResolvedTrip } from "../lib/useResolvedTrip";
-import { Tag, Note } from "../components/ui";
+import { Tag, Note, PageTitle } from "../components/ui";
 
 export default function PaymentPage() {
   const trip = useResolvedTrip();
@@ -32,10 +32,7 @@ export default function PaymentPage() {
 
   return (
     <div className="px-4 pb-8 pt-5">
-      <h2 className="font-serif-jp flex items-center gap-2 text-[18px] font-bold text-[var(--accent-dark)]">
-        <span className="text-[22px]">💳</span>決済ガイド
-      </h2>
-      <p className="mt-1 text-[12px] text-[var(--text-sub)]">{strategy}</p>
+      <PageTitle emoji="💳" title="決済ガイド" desc={strategy} />
 
       {/* 現金残高トラッカー */}
       <div className="mt-4 rounded-[14px] border border-[var(--accent)] bg-gradient-to-br from-[var(--accent)] to-[var(--accent-dark)] p-4 text-white shadow-[var(--shadow-hover)]">

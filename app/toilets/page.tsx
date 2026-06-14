@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { useResolvedTrip } from "../lib/useResolvedTrip";
 import { useGeo, distanceMeters, formatDistance } from "../lib/useGeo";
 import { toiletCoord, nearbyToiletMapUrl } from "../lib/toiletGeo";
+import { PageTitle } from "../components/ui";
 
 const RANK_BADGE = ["🥇", "🥈", "🥉"];
 
@@ -29,12 +30,11 @@ export default function ToiletsPage() {
 
   return (
     <div className="px-4 pb-8 pt-5">
-      <h2 className="font-serif-jp flex items-center gap-2 text-[18px] font-bold text-[var(--accent-dark)]">
-        <span className="text-[22px]">🚻</span>きれいなトイレ ガイド
-      </h2>
-      <p className="mt-1 text-[12px] text-[var(--text-sub)]">
-        清潔度の高い順。各観光名所からの距離（徒歩目安）つき。
-      </p>
+      <PageTitle
+        emoji="🚻"
+        title="きれいなトイレ ガイド"
+        desc="清潔度の高い順。各観光名所からの距離（徒歩目安）つき。"
+      />
 
       {/* 現在地モード */}
       <div className="mt-3 flex items-center gap-2">

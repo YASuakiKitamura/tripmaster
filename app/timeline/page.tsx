@@ -18,6 +18,7 @@ import { TimelineCalendar } from "../components/TimelineCalendar";
 import { AiEditPanel } from "../components/AiEditPanel";
 import { ItineraryItemForm } from "../components/ItineraryItemForm";
 import { NowOverridePanel } from "../components/NowOverridePanel";
+import { PageTitle } from "../components/ui";
 
 export default function TimelinePage() {
   const now = useNow();
@@ -83,9 +84,7 @@ export default function TimelinePage() {
     <div className="pb-8">
       <div className="px-4 pt-5">
         <div className="flex items-start justify-between gap-2">
-          <h2 className="font-serif-jp flex items-center gap-2 text-[18px] font-bold text-[var(--accent-dark)]">
-            <span className="text-[22px]">🕐</span>タイムライン
-          </h2>
+          <PageTitle emoji="🕐" title="タイムライン" />
           <div className="flex items-center gap-1.5">
             <button
               onClick={() => setClockOpen(true)}

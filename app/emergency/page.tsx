@@ -1,6 +1,7 @@
 "use client";
 
 import { useResolvedTrip } from "../lib/useResolvedTrip";
+import { PageTitle } from "../components/ui";
 
 export default function EmergencyPage() {
   const trip = useResolvedTrip();
@@ -8,9 +9,7 @@ export default function EmergencyPage() {
 
   return (
     <div className="px-4 pb-8 pt-5">
-      <h2 className="font-serif-jp flex items-center gap-2 text-[18px] font-bold text-[var(--accent-dark)]">
-        <span className="text-[22px]">🆘</span>緊急対応
-      </h2>
+      <PageTitle emoji="🆘" title="緊急対応" />
 
       {/* 最重要警告 */}
       <div className="mt-3 rounded-[12px] border-2 border-[var(--accent2)] bg-[var(--accent-light)] p-4">

@@ -2,11 +2,12 @@
 // 共通の ResolvedTrip に正規化する。サーバー/クライアント両方から import 可能（純データ）。
 import seoulRaw from "@/app/data/trips/seoul-2026.json";
 import himejiRaw from "@/app/data/trips/himeji-okayama-2026.json";
+import okinawaRaw from "@/app/data/trips/okinawa-2026.json";
 import type { TripData, ItineraryItem } from "./types";
 import { getTrip, DEFAULT_TRIP_ID } from "./trips";
 import { navItems, type NavItem } from "./nav";
 
-const seoul = seoulRaw as unknown as TripData;
+const seoul = seoulRaw as unknown as SeoulData;
 
 // ---- 姫路JSONの型（必要分のみ） ----
 interface HStation { station: string; time: string; date: string }
@@ -67,8 +68,32 @@ interface HimejiData {
     lastTrain?: { name: string; departure: string; note?: string };
   };
   tips?: { title: string; body: string }[];
+  extras: DomesticExtras;
 }
+
+/** 旅ごとに違う付帯情報。旅 JSON の `extras` キーに格納（resolveTrip では変換しない純データ）。 */
+interface DomesticExtras {
+  initialCash: number;
+  reminders: string[];
+  apps: HelpApp[];
+  toilets: ToiletSpot[];
+  weather: WeatherPoint[];
+}
+
+/** ソウル等の海外旅の付帯情報。現金は payment 側にあるため initialCash は持たない。 */
+interface SeoulExtras {
+  reminders: string[];
+  apps: HelpApp[];
+  bookings: { label: string; url: string; note?: string }[];
+  toilets: ToiletSpot[];
+  weather: WeatherPoint[];
+}
+interface SeoulData extends TripData {
+  extras: SeoulExtras;
+}
+
 const himeji = himejiRaw as unknown as HimejiData;
+const okinawa = okinawaRaw as unknown as HimejiData;
 
 // ---- 正規化後の型 ----
 export interface Leg {
@@ -178,6 +203,8 @@ export interface ResolvedTrip {
   tips?: { title: string; body: string }[];
   reminders: string[];
   apps: HelpApp[];
+  /** 予約・公式リンク集（付録）。ホーム下部に直リンクで掲示 */
+  bookings?: { label: string; url: string; note?: string }[];
   toilets: ToiletSpot[];
   weather: WeatherPoint[];
   confirmList: string[];
@@ -330,157 +357,11 @@ function resolveSeoul(): ResolvedTrip {
         },
       ],
     },
-    reminders: [
-      "e-Arrival Card を出発前にオンライン申請（2026年から紙廃止）",
-      "復路 MM808 は最終便（22:35発・後がない）。ピーチ締切は出発50分前",
-      "カードは必ずウォン建て決済（DCC回避で3-5%節約）",
-      "WOWPASS は夜ソウル駅で現金化一択",
-    ],
-    apps: [
-      { label: "NAVER Map", emoji: "🗺", url: "https://map.naver.com/", note: "韓国はGoogleマップが弱い。ナビはこれ" },
-      { label: "KakaoMap", emoji: "🧭", url: "https://map.kakao.com/", note: "もう一つの定番地図" },
-      { label: "Papago", emoji: "🗣", url: "https://papago.naver.com/", note: "韓国語に強い翻訳・カメラ翻訳" },
-      { label: "Google翻訳", emoji: "🌐", url: "https://translate.google.com/?sl=ja&tl=ko&op=translate" },
-      { label: "ソウル天気", emoji: "☀️", url: "https://www.google.com/search?q=서울+날씨" },
-      { label: "為替(₩→¥)", emoji: "💱", url: "https://www.google.com/search?q=1000+won+to+jpy" },
-    ],
-    toilets: [
-      {
-        rank: 1,
-        name: "ロッテ百貨店 本店",
-        area: "明洞・乙支路入口（乙支路入口駅 直結）",
-        clean: "★★★ 最上級（デパート品質）",
-        tip: "明洞での駆け込みはここが鉄板。化粧室が広く混雑にも強い。",
-        near: [
-          { spot: "瑞源/明洞（朝食）", walk: "徒歩5分" },
-          { spot: "明洞ショッピング", walk: "徒歩3〜5分" },
-        ],
-      },
-      {
-        rank: 2,
-        name: "仁川空港 第1ターミナル",
-        area: "仁川空港 T1",
-        clean: "★★★ 世界トップクラス",
-        tip: "復路チェックイン前後に。個室・パウダー充実。",
-        near: [
-          { spot: "復路チェックイン", walk: "館内すぐ" },
-          { spot: "AREX 仁川到着", walk: "連絡通路すぐ" },
-        ],
-      },
-      {
-        rank: 3,
-        name: "ソウル駅 構内",
-        area: "ソウル駅（AREX/KTX）",
-        clean: "★★★ 清潔・数も多い",
-        tip: "朝の到着時と、夜のWOWPASS現金化のタイミングで使える。",
-        near: [
-          { spot: "AREXソウル駅着（朝）", walk: "改札内すぐ" },
-          { spot: "WOWPASS現金化（夜）", walk: "同フロア" },
-        ],
-      },
-      {
-        rank: 4,
-        name: "斗山타워 / 現代アウトレット 東大門",
-        area: "東大門（DDP周辺）",
-        clean: "★★☆ 商業施設で安定",
-        tip: "ナッコプセや東大門の買い物の合間に。",
-        near: [
-          { spot: "용호동낙지（夕食）", walk: "徒歩5分" },
-          { spot: "東大門・DDP", walk: "徒歩3〜5分" },
-        ],
-      },
-      {
-        rank: 5,
-        name: "広蔵市場 周辺の建物・カフェ",
-        area: "鍾路5街（広蔵市場）",
-        clean: "★☆☆ 市場内トイレは衛生面△",
-        tip: "市場内は混雑＆簡素。隣接ビルやスタバ等のカフェ利用が無難。",
-        near: [
-          { spot: "부촌육회（広蔵市場）", walk: "市場内〜徒歩3分" },
-          { spot: "鍾路5街駅", walk: "徒歩2分" },
-        ],
-      },
-      {
-        rank: 6,
-        name: "大田駅 構内（靖晃）",
-        area: "大田駅（KTX）",
-        clean: "★★☆ 駅構内で清潔",
-        tip: "靖晃の大田パート。ATMキャッシングや食堂の前後に。",
-        near: [
-          { spot: "광천식당（大田）", walk: "駅から徒歩圏" },
-          { spot: "성심당", walk: "駅周辺" },
-        ],
-      },
-      {
-        rank: 7,
-        name: "新世界百貨店 本店（明洞・会賢）",
-        area: "明洞・会賢（会賢駅直結／明洞から徒歩約7分）",
-        clean: "★★★ 最上級（老舗デパート）",
-        tip: "ロッテが混むときの明洞・第二候補。化粧室がゆったりで南大門側に出るとき便利。",
-        near: [
-          { spot: "明洞ショッピング", walk: "徒歩5〜7分" },
-          { spot: "南大門市場", walk: "徒歩3分" },
-        ],
-      },
-      {
-        rank: 8,
-        name: "明洞駅 / 乙支路入口駅 構内（地下鉄）",
-        area: "明洞（4号線 明洞駅・2号線 乙支路入口駅）",
-        clean: "★★☆ 無料・改札内で概ね清潔",
-        tip: "買い物の合間にサッと。改札内なので入場前に。ポケットティッシュ携帯が無難。",
-        near: [
-          { spot: "明洞ショッピング", walk: "駅直結" },
-          { spot: "瑞源・明洞（朝食）", walk: "徒歩5分" },
-        ],
-      },
-      {
-        rank: 9,
-        name: "現代百貨店 狎鴎亭本店（ひとみ）",
-        area: "狎鴎亭（狎鴎亭駅 直結エリア）",
-        clean: "★★★ 最上級（高級百貨店）",
-        tip: "ひとみの狎鴎亭パート。Goshen前後の身支度に最適。パウダールーム充実。",
-        near: [
-          { spot: "Goshen Beauty", walk: "徒歩圏" },
-          { spot: "狎鴎亭駅", walk: "直結" },
-        ],
-      },
-      {
-        rank: 10,
-        name: "仁川空港 T1 出国エリア（免税フロア・各ゲート）",
-        area: "仁川空港 T1（保安検査後エアサイド）",
-        clean: "★★★ 世界トップクラス",
-        tip: "復路の保安検査を抜けた後。搭乗前にここで済ませると安心。各ゲート付近に点在。",
-        near: [
-          { spot: "免税店（復路）", walk: "館内すぐ" },
-          { spot: "MM808 搭乗ゲート", walk: "各ゲート付近" },
-        ],
-      },
-      {
-        rank: 11,
-        name: "KTX 車内・大田駅ホーム（靖晃）",
-        area: "KTX車内／大田駅",
-        clean: "★★☆ 車両連結部に洗面所",
-        tip: "靖晃の往復KTX。各連結部にトイレ。混雑時は乗車前に大田駅・ソウル駅で済ませるのが確実。",
-        near: [
-          { spot: "KTX 017/024 乗車", walk: "連結部" },
-          { spot: "大田駅（광천식당/성심당）", walk: "駅構内" },
-        ],
-      },
-      {
-        rank: 12,
-        name: "東大門 굿모닝시티 / ミリオレ等のファッションビル",
-        area: "東大門（DDP周辺の商業ビル）",
-        clean: "★★☆ ファッションビルで安定",
-        tip: "夜の東大門買い物・ナッコプセの合間に。Doota（現代アウトレット）が混むときの代替。",
-        near: [
-          { spot: "용호동낙지（ナッコプセ）", walk: "徒歩5分" },
-          { spot: "DDP", walk: "徒歩3分" },
-        ],
-      },
-    ],
-    weather: [
-      { label: "ソウル", lat: 37.5665, lon: 126.978, date: "2026-06-17" },
-    ],
+    reminders: seoul.extras.reminders,
+    apps: seoul.extras.apps,
+    bookings: seoul.extras.bookings,
+    toilets: seoul.extras.toilets,
+    weather: seoul.extras.weather,
     confirmList: [],
     hasPhrases: true,
     hasChecklist: true,
@@ -488,8 +369,8 @@ function resolveSeoul(): ResolvedTrip {
   };
 }
 
-function resolveHimeji(): ResolvedTrip {
-  const t = himeji;
+function resolveDomestic(t: HimejiData, id: string): ResolvedTrip {
+  const x = t.extras;
   const legEmoji = (type: string) => (type === "新幹線" ? "🚄" : "✈️");
   const leg = (f: HLeg, kind: string): Leg => ({
     emoji: legEmoji(f.type),
@@ -541,15 +422,15 @@ function resolveHimeji(): ResolvedTrip {
   const e = t.emergency;
   const r = t.transport.return;
   return {
-    id: "himeji-okayama-2026",
+    id,
     title: t.trip.title,
-    dateLabel: dateLabel("himeji-okayama-2026"),
+    dateLabel: dateLabel(id),
     summary: t.trip.summary,
     travelers: t.trip.travelers,
     legs: { outbound: leg(t.transport.outbound, "往路"), return: leg(r, "復路") },
     itinerary: t.itinerary,
     stores,
-    payment: { strategy: p.strategy, methods, currency: "¥", initialCash: 20000 },
+    payment: { strategy: p.strategy, methods, currency: "¥", initialCash: x.initialCash },
     emergency: {
       warning: {
         title: `復路 ${r.name}（${r.departure.time} ${r.departure.station}発）`,
@@ -563,101 +444,10 @@ function resolveHimeji(): ResolvedTrip {
     },
     lodging: t.lodging,
     tips: t.tips,
-    reminders: [
-      "復路 ANA658（17:20 岡山発）に乗り遅れない。後続便・新幹線が保険",
-      "羽田P駐車場はオンライン事前予約必須",
-      "猛暑期：帽子・水分・冷感タオルを徹底",
-      "福寿司は要予約。宿チェックインは19:00開始",
-    ],
-    apps: [
-      { label: "Googleマップ", emoji: "🗺", url: "https://www.google.com/maps", note: "ナビ・店検索" },
-      { label: "Yahoo!乗換案内", emoji: "🚆", url: "https://transit.yahoo.co.jp/", note: "JR・新幹線の時刻/乗換" },
-      { label: "岡山の天気", emoji: "☀️", url: "https://www.google.com/search?q=岡山+天気" },
-      { label: "姫路の天気", emoji: "🌤", url: "https://www.google.com/search?q=姫路+天気" },
-      { label: "ANA運航案内", emoji: "✈️", url: "https://www.ana.co.jp/fl/ja/jp/" },
-      { label: "食べログ", emoji: "🍴", url: "https://tabelog.com/okayama/" },
-    ],
-    toilets: [
-      {
-        rank: 1,
-        name: "岡山駅 さんすて／駅構内",
-        area: "JR岡山駅",
-        clean: "★★★ 広く清潔・数も多い",
-        tip: "ホテル・後楽園・表町・空港バスの起点。困ったらここ。",
-        near: [
-          { spot: "スーパーホテル（宿）", walk: "徒歩10分" },
-          { spot: "表町商店街", walk: "徒歩10〜15分" },
-          { spot: "岡山空港バス乗り場", walk: "西口すぐ" },
-        ],
-      },
-      {
-        rank: 2,
-        name: "姫路城・好古園（入城口・園内）",
-        area: "姫路城エリア",
-        clean: "★★★ 観光整備できれい",
-        tip: "猛暑日は入城前に済ませると安心。城内は階段が多く戻りにくい。",
-        near: [
-          { spot: "姫路城・好古園", walk: "敷地内すぐ" },
-          { spot: "姫路駅", walk: "徒歩15分（大手前通り）" },
-        ],
-      },
-      {
-        rank: 3,
-        name: "姫路駅 ピオレ／駅構内",
-        area: "JR姫路駅",
-        clean: "★★★ 駅ビルで清潔",
-        tip: "城へ向かう前後に。新幹線移動時もここで。",
-        near: [
-          { spot: "姫路城", walk: "徒歩15分" },
-          { spot: "のぞみ乗車（岡山へ）", walk: "改札内すぐ" },
-        ],
-      },
-      {
-        rank: 4,
-        name: "神戸空港 ターミナル",
-        area: "神戸空港",
-        clean: "★★★ 新しく清潔",
-        tip: "到着直後に。ポートライナー乗車前に済ませると三宮で慌てない。",
-        near: [
-          { spot: "ANA411 到着", walk: "館内すぐ" },
-          { spot: "ポートライナー乗り場", walk: "連絡通路すぐ" },
-        ],
-      },
-      {
-        rank: 5,
-        name: "後楽園（園内・正門）",
-        area: "岡山後楽園",
-        clean: "★★☆ 園内に複数あり",
-        tip: "日陰が少ないので休憩とセットで。岡山城へ渡る前に。",
-        near: [
-          { spot: "岡山後楽園", walk: "園内すぐ" },
-          { spot: "岡山城（烏城）", walk: "徒歩5分（月見橋）" },
-        ],
-      },
-      {
-        rank: 6,
-        name: "明石駅 アスピア明石／駅ビル",
-        area: "明石（魚の棚周辺）",
-        clean: "★★☆ 駅ビルで安定",
-        tip: "魚の棚・明石焼きの前後に。市場内は簡素なので駅ビル推奨。",
-        near: [
-          { spot: "たこ磯（明石焼き）", walk: "徒歩3分" },
-          { spot: "魚の棚商店街", walk: "徒歩2分" },
-        ],
-      },
-      {
-        rank: 7,
-        name: "三宮 そごう／さんちか地下街",
-        area: "三宮",
-        clean: "★★☆ 百貨店・地下街で清潔",
-        tip: "三宮街歩きの合間に。百貨店トイレが快適。",
-        near: [{ spot: "三宮街歩き", walk: "徒歩すぐ〜5分" }],
-      },
-    ],
-    weather: [
-      { label: "姫路", lat: 34.8394, lon: 134.6939, date: "2026-07-29" },
-      { label: "岡山", lat: 34.6551, lon: 133.9195, date: "2026-07-30" },
-    ],
+    reminders: x.reminders,
+    apps: x.apps,
+    toilets: x.toilets,
+    weather: x.weather,
     confirmList: t._confirm ?? [],
     hasPhrases: false,
     hasChecklist: false,
@@ -667,8 +457,16 @@ function resolveHimeji(): ResolvedTrip {
   };
 }
 
+// 国内旅レジストリ: 構造が同じ姫路型JSONを id で引く。新しい国内旅は
+// JSON を import して1エントリ足すだけ（変換ロジックは触らない）。
+const DOMESTIC: Record<string, HimejiData> = {
+  "himeji-okayama-2026": himeji,
+  "okinawa-2026": okinawa,
+};
+
 export function resolveTrip(id: string): ResolvedTrip {
-  if (id === "himeji-okayama-2026") return resolveHimeji();
+  const domestic = DOMESTIC[id];
+  if (domestic) return resolveDomestic(domestic, id);
   return resolveSeoul();
 }
 

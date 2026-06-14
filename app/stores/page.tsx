@@ -2,7 +2,8 @@
 
 import { useResolvedTrip } from "../lib/useResolvedTrip";
 import type { StoreHighlight } from "../lib/resolveTrip";
-import { Tag, Note } from "../components/ui";
+import { Tag, Note, PageTitle } from "../components/ui";
+import { PhotoStrip } from "../components/PhotoStrip";
 
 function HighlightBlock({ h }: { h: StoreHighlight }) {
   return (
@@ -33,12 +34,11 @@ export default function StoresPage() {
 
   return (
     <div className="px-4 pb-8 pt-5">
-      <h2 className="font-serif-jp flex items-center gap-2 text-[18px] font-bold text-[var(--accent-dark)]">
-        <span className="text-[22px]">📍</span>店舗ガイド
-      </h2>
-      <p className="mt-1 text-[12px] text-[var(--text-sub)]">
-        この旅で寄るお店の注文・決済ガイド。
-      </p>
+      <PageTitle
+        emoji="📍"
+        title="店舗ガイド"
+        desc="この旅で寄るお店の注文・決済ガイド。"
+      />
 
       <div className="mt-4 space-y-4">
         {trip.stores.map((s) => (
@@ -96,6 +96,8 @@ export default function StoresPage() {
               ))}
 
               {s.notes && <Note>{s.notes}</Note>}
+
+              <PhotoStrip id={`store:${s.id}`} />
 
               <a
                 href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(

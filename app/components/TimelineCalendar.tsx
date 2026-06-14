@@ -15,6 +15,7 @@ import {
   seoulWallToMs,
 } from "../lib/useNow";
 import { getPlaceLink, mapUrl } from "../lib/placeLinks";
+import { PhotoStrip } from "./PhotoStrip";
 
 // Googleカレンダー風の時間比例レイアウト。
 // ・各カードは最低 MIN_BLOCK_PX の高さを確保（短い予定でも読める）
@@ -472,6 +473,7 @@ function DetailSheet({
             )}
           </div>
         )}
+        <PhotoStrip id={`item:${item.id}`} />
         {/* 実績打刻＆以降のずらし */}
         <div className="mt-3 border-t border-dashed border-[var(--border)] pt-3">
           <button

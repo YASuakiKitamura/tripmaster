@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useResolvedTrip } from "../lib/useResolvedTrip";
+import { PageTitle } from "../components/ui";
 
 interface CheckItem {
   id: string;
@@ -110,12 +111,11 @@ export default function ChecklistPage() {
 
   return (
     <div className="px-4 pb-8 pt-5">
-      <h2 className="font-serif-jp flex items-center gap-2 text-[18px] font-bold text-[var(--accent-dark)]">
-        <span className="text-[22px]">✅</span>準備チェックリスト
-      </h2>
-      <p className="mt-1 text-[12px] text-[var(--text-sub)]">
-        チェック状態はこの端末に保存されます。
-      </p>
+      <PageTitle
+        emoji="✅"
+        title="準備チェックリスト"
+        desc="チェック状態はこの端末に保存されます。"
+      />
 
       {/* 進捗バー */}
       <div className="mt-3 rounded-[12px] border border-[var(--border)] bg-white p-3 shadow-[var(--shadow)]">

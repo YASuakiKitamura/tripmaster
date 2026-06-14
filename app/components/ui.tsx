@@ -23,23 +23,29 @@ export function Tag({
   );
 }
 
-export function SectionTitle({
+/**
+ * 各ページ共通の見出し（絵文字＋タイトル、任意で説明文）。
+ * フラグメントなので、ページ側の余白コンテナ／flex 行にそのまま差し込める。
+ */
+export function PageTitle({
   emoji,
   title,
   desc,
 }: {
   emoji: string;
-  title: string;
-  desc?: string;
+  title: ReactNode;
+  desc?: ReactNode;
 }) {
   return (
-    <div className="px-4 pt-5 pb-3">
+    <>
       <h2 className="font-serif-jp flex items-center gap-2 text-[18px] font-bold text-[var(--accent-dark)]">
         <span className="text-[22px]">{emoji}</span>
         {title}
       </h2>
-      {desc && <p className="mt-1 text-[12px] text-[var(--text-sub)]">{desc}</p>}
-    </div>
+      {desc != null && (
+        <p className="mt-1 text-[12px] text-[var(--text-sub)]">{desc}</p>
+      )}
+    </>
   );
 }
 

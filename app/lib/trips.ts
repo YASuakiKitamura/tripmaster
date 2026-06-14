@@ -30,6 +30,15 @@ export const trips: TripMeta[] = [
     status: "ready",
     teaser: "国内1泊2日。姫路城と岡山の旅。",
   },
+  {
+    id: "okinawa-2026",
+    name: "沖縄ドライブ",
+    destination: "沖縄",
+    emoji: "🌺",
+    dateLabel: "2026.09.29–10.01",
+    status: "ready",
+    teaser: "レンタカー2泊3日。美ら海・首里・うるまの旅。",
+  },
 ];
 
 export const DEFAULT_TRIP_ID = "seoul-2026";

@@ -9,7 +9,7 @@ export interface PlaceLink {
 
 const SEOUL: Record<string, PlaceLink> = {
   "arrive-icn": { q: "인천국제공항 제1여객터미널", info: { label: "仁川空港 公式", url: "https://www.airport.kr/ap_lp/ja/index.do" } },
-  "arex-inbound": { q: "서울역" },
+  "arex-inbound": { q: "서울역", info: { label: "AREX 予約・チケット", url: "https://www.airportrailroad.com/ticket/info" } },
   breakfast: { q: "서원죽 명동" },
   "hitomi-to-apgujeong": { q: "도산공원 압구정" },
   "daejeon-atm-food": { q: "광천식당 대전" },
@@ -21,6 +21,7 @@ const SEOUL: Record<string, PlaceLink> = {
   dongdaemun: { q: "동대문디자인플라자 DDP" },
   nakkopsae: { q: "용호동낙지 동대문" },
   "move-to-station": { q: "서울역" },
+  "arex-return": { q: "인천국제공항 제1여객터미널", info: { label: "AREX 予約・チケット", url: "https://www.airportrailroad.com/ticket/info" } },
   "wowpass-cashout": { q: "서울역" },
   "checkin-return": { q: "인천국제공항 제1여객터미널" },
   // 日本国内の地点は Googleマップ
@@ -50,8 +51,41 @@ const HIMEJI: Record<string, PlaceLink> = {
   "day2-airport-checkin": { q: "岡山空港" },
 };
 
+const OKINAWA: Record<string, PlaceLink> = {
+  "day1-flight-out": { q: "那覇空港" },
+  "day1-arrive-naha": { q: "那覇空港" },
+  "day1-hotel-dropoff": { q: "ホテル ストレータ那覇 牧志" },
+  "day1-checkin": { q: "ホテル ストレータ那覇 牧志" },
+  "day3-checkout-depart": { q: "ホテル ストレータ那覇 牧志" },
+  "day1-shurijo": {
+    q: "首里城公園",
+    info: { label: "首里城公園 公式", url: "https://oki-park.jp/shurijo/" },
+  },
+  "day1-lunch-suri-soba": { q: "首里そば 那覇" },
+  "day1-kokusai-dinner": { q: "牧志公設市場 那覇" },
+  "day2-churaumi": {
+    q: "沖縄美ら海水族館",
+    info: { label: "美ら海水族館 公式", url: "https://churaumi.okinawa/" },
+  },
+  "day2-lunch-motobu": { q: "きしもと食堂 本部" },
+  "day2-kouri-fukugi": { q: "古宇利島" },
+  "day3-kadena-burger": { q: "Bob's バーガー 嘉手納" },
+  "day3-kaichu-uruma": { q: "海中道路 うるま" },
+  "day3-sams-steak": { q: "サムズ ステーキ 沖縄" },
+  "day1-rentacar-shuttle": { q: "ABCレンタカー 那覇空港営業所 那覇市田原" },
+  "day1-rentacar-pickup": { q: "ABCレンタカー 那覇空港営業所 那覇市田原" },
+  "day3-rentacar-return": { q: "ABCレンタカー 那覇空港営業所 那覇市田原" },
+  "day3-checkin-airport": { q: "那覇空港" },
+  "day3-flight-back": { q: "那覇空港" },
+};
+
 export function getPlaceLink(tripId: string, itemId: string): PlaceLink | null {
-  const table = tripId === "seoul-2026" ? SEOUL : HIMEJI;
+  const table =
+    tripId === "seoul-2026"
+      ? SEOUL
+      : tripId === "okinawa-2026"
+        ? OKINAWA
+        : HIMEJI;
   return table[itemId] ?? null;
 }
 

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { phraseCategories } from "../lib/phrases";
 import type { Phrase } from "../lib/types";
-import { Tag } from "../components/ui";
+import { Tag, PageTitle } from "../components/ui";
 import { useResolvedTrip } from "../lib/useResolvedTrip";
 
 export default function PhrasesPage() {
@@ -30,12 +30,11 @@ export default function PhrasesPage() {
   return (
     <div className="pb-8">
       <div className="px-4 pt-5">
-        <h2 className="font-serif-jp flex items-center gap-2 text-[18px] font-bold text-[var(--accent-dark)]">
-          <span className="text-[22px]">💬</span>会話フレーズ
-        </h2>
-        <p className="mt-1 text-[12px] text-[var(--text-sub)]">
-          「店員に見せる」で韓国語を全画面表示できます。
-        </p>
+        <PageTitle
+          emoji="💬"
+          title="会話フレーズ"
+          desc="「店員に見せる」で韓国語を全画面表示できます。"
+        />
       </div>
 
       {/* カテゴリタブ（横スクロール・sticky） */}

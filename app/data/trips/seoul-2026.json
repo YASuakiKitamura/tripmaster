@@ -4,8 +4,18 @@
     "date": "2026-06-17",
     "dayOfWeek": "水曜日",
     "travelers": [
-      { "name": "靖晃", "nameKo": "키타무라 야스아키", "email": "yasuaki@primecool.com", "seat": "22A" },
-      { "name": "ひとみ", "nameKo": "키타무라 히토미", "email": "hitomi@primecool.com", "seat": "22B" }
+      {
+        "name": "靖晃",
+        "nameKo": "키타무라 야스아키",
+        "email": "yasuaki@primecool.com",
+        "seat": "22A"
+      },
+      {
+        "name": "ひとみ",
+        "nameKo": "키타무라 히토미",
+        "email": "hitomi@primecool.com",
+        "seat": "22B"
+      }
     ]
   },
   "flights": {
@@ -13,17 +23,40 @@
       "flight": "MM809",
       "aircraft": "A320 Neo",
       "fareClass": "ミニマム QLT",
-      "departure": { "airport": "羽田T3", "time": "02:10", "timezone": "Asia/Tokyo" },
-      "arrival": { "airport": "仁川T1", "time": "04:40", "timezone": "Asia/Seoul" },
-      "checkedBaggage": { "靖晃": false, "ひとみ": false }
+      "departure": {
+        "airport": "羽田T3",
+        "time": "02:10",
+        "timezone": "Asia/Tokyo"
+      },
+      "arrival": {
+        "airport": "仁川T1",
+        "time": "04:40",
+        "timezone": "Asia/Seoul"
+      },
+      "checkedBaggage": {
+        "靖晃": false,
+        "ひとみ": false
+      }
     },
     "return": {
       "flight": "MM808",
       "aircraft": "A320 Neo",
       "fareClass": "ミニマム SLT",
-      "departure": { "airport": "仁川T1", "time": "22:35", "timezone": "Asia/Seoul" },
-      "arrival": { "airport": "羽田T3", "time": "00:55", "timezone": "Asia/Tokyo", "nextDay": true },
-      "checkedBaggage": { "靖晃": true, "ひとみ": false },
+      "departure": {
+        "airport": "仁川T1",
+        "time": "22:35",
+        "timezone": "Asia/Seoul"
+      },
+      "arrival": {
+        "airport": "羽田T3",
+        "time": "00:55",
+        "timezone": "Asia/Tokyo",
+        "nextDay": true
+      },
+      "checkedBaggage": {
+        "靖晃": true,
+        "ひとみ": false
+      },
       "isLastFlight": true,
       "peachDeadlineMinutes": 50
     }
@@ -31,7 +64,12 @@
   "itinerary": [
     {
       "id": "depart-home",
-      "time": { "start": "22:15", "end": "23:25", "tz": "Asia/Tokyo", "date": "2026-06-16" },
+      "time": {
+        "start": "22:15",
+        "end": "23:25",
+        "tz": "Asia/Tokyo",
+        "date": "2026-06-16"
+      },
       "who": "夫婦",
       "emoji": "🚗",
       "title": "家を出発（羽田へ・70分）",
@@ -39,7 +77,12 @@
     },
     {
       "id": "arrive-haneda",
-      "time": { "start": "23:25", "end": "23:30", "tz": "Asia/Tokyo", "date": "2026-06-16" },
+      "time": {
+        "start": "23:25",
+        "end": "23:30",
+        "tz": "Asia/Tokyo",
+        "date": "2026-06-16"
+      },
       "who": "夫婦",
       "emoji": "🛬",
       "title": "羽田T3着（出発165分前）",
@@ -47,7 +90,12 @@
     },
     {
       "id": "checkin-outbound",
-      "time": { "start": "23:30", "end": "00:15", "tz": "Asia/Tokyo", "date": "2026-06-16" },
+      "time": {
+        "start": "23:30",
+        "end": "00:15",
+        "tz": "Asia/Tokyo",
+        "date": "2026-06-16"
+      },
       "who": "夫婦",
       "emoji": "🎫",
       "title": "チェックイン（ピーチは締切厳しめ）",
@@ -55,7 +103,11 @@
     },
     {
       "id": "immigration-outbound",
-      "time": { "start": "00:15", "end": "00:45", "tz": "Asia/Tokyo" },
+      "time": {
+        "start": "00:15",
+        "end": "00:45",
+        "tz": "Asia/Tokyo"
+      },
       "who": "夫婦",
       "emoji": "🛂",
       "title": "出国審査・保安検査（往路）",
@@ -63,7 +115,11 @@
     },
     {
       "id": "boarding-outbound",
-      "time": { "start": "00:45", "end": "02:10", "tz": "Asia/Tokyo" },
+      "time": {
+        "start": "00:45",
+        "end": "02:10",
+        "tz": "Asia/Tokyo"
+      },
       "who": "夫婦",
       "emoji": "✈️",
       "title": "搭乗ゲートへ → MM809 02:10発",
@@ -71,7 +127,11 @@
     },
     {
       "id": "arrive-icn",
-      "time": { "start": "04:40", "end": "06:08", "tz": "Asia/Seoul" },
+      "time": {
+        "start": "04:40",
+        "end": "06:08",
+        "tz": "Asia/Seoul"
+      },
       "who": "夫婦",
       "emoji": "🛬",
       "title": "仁川T1着・入国審査",
@@ -79,7 +139,11 @@
     },
     {
       "id": "arex-inbound",
-      "time": { "start": "06:08", "end": "06:51", "tz": "Asia/Seoul" },
+      "time": {
+        "start": "06:08",
+        "end": "06:51",
+        "tz": "Asia/Seoul"
+      },
       "who": "夫婦",
       "emoji": "🚆",
       "title": "AREX A1004でソウル駅へ（4号車6C/6D）",
@@ -87,7 +151,11 @@
     },
     {
       "id": "breakfast",
-      "time": { "start": "06:51", "end": "08:30", "tz": "Asia/Seoul" },
+      "time": {
+        "start": "06:51",
+        "end": "08:30",
+        "tz": "Asia/Seoul"
+      },
       "who": "夫婦",
       "emoji": "🥣",
       "title": "朝食・瑞源（서원죽）明洞アワビ粥",
@@ -95,7 +163,11 @@
     },
     {
       "id": "yas-to-station",
-      "time": { "start": "08:30", "end": "08:58", "tz": "Asia/Seoul" },
+      "time": {
+        "start": "08:30",
+        "end": "08:58",
+        "tz": "Asia/Seoul"
+      },
       "who": "靖晃",
       "emoji": "🚇",
       "title": "明洞→ソウル駅移動（KTXへ）",
@@ -103,7 +175,11 @@
     },
     {
       "id": "hitomi-to-apgujeong",
-      "time": { "start": "08:30", "end": "10:00", "tz": "Asia/Seoul" },
+      "time": {
+        "start": "08:30",
+        "end": "10:00",
+        "tz": "Asia/Seoul"
+      },
       "who": "ひとみ",
       "emoji": "🚇",
       "title": "明洞散策→狎鴎亭へ移動→Goshen着",
@@ -111,7 +187,11 @@
     },
     {
       "id": "ktx-outbound",
-      "time": { "start": "08:58", "end": "09:50", "tz": "Asia/Seoul" },
+      "time": {
+        "start": "08:58",
+        "end": "09:50",
+        "tz": "Asia/Seoul"
+      },
       "who": "靖晃",
       "emoji": "🚄",
       "title": "往路・KTX-청룡 017 特室で大田へ（動力分散）",
@@ -119,7 +199,11 @@
     },
     {
       "id": "daejeon-atm-food",
-      "time": { "start": "09:50", "end": "10:50", "tz": "Asia/Seoul" },
+      "time": {
+        "start": "09:50",
+        "end": "10:50",
+        "tz": "Asia/Seoul"
+      },
       "who": "靖晃",
       "emoji": "🏧🌶️",
       "title": "Global ATMで現金確保→광천식당で두부두루치기",
@@ -127,7 +211,11 @@
     },
     {
       "id": "goshen",
-      "time": { "start": "10:00", "end": "12:00", "tz": "Asia/Seoul" },
+      "time": {
+        "start": "10:00",
+        "end": "12:00",
+        "tz": "Asia/Seoul"
+      },
       "who": "ひとみ",
       "emoji": "💄",
       "title": "Goshen Beauty（支払済）",
@@ -135,7 +223,11 @@
     },
     {
       "id": "seongsim",
-      "time": { "start": "10:50", "end": "11:50", "tz": "Asia/Seoul" },
+      "time": {
+        "start": "10:50",
+        "end": "11:50",
+        "tz": "Asia/Seoul"
+      },
       "who": "靖晃",
       "emoji": "🥐",
       "title": "성심당で튀김소보로・부추빵（お土産）",
@@ -143,7 +235,11 @@
     },
     {
       "id": "daejeon-return",
-      "time": { "start": "11:50", "end": "12:28", "tz": "Asia/Seoul" },
+      "time": {
+        "start": "11:50",
+        "end": "12:28",
+        "tz": "Asia/Seoul"
+      },
       "who": "靖晃",
       "emoji": "🚶",
       "title": "大田駅へ戻る・ホームへ",
@@ -151,7 +247,11 @@
     },
     {
       "id": "hitomi-to-myeongdong",
-      "time": { "start": "12:00", "end": "12:30", "tz": "Asia/Seoul" },
+      "time": {
+        "start": "12:00",
+        "end": "12:30",
+        "tz": "Asia/Seoul"
+      },
       "who": "ひとみ",
       "emoji": "🚇",
       "title": "狎鴎亭→明洞へ移動（片道30分）",
@@ -159,7 +259,11 @@
     },
     {
       "id": "ktx-return",
-      "time": { "start": "12:28", "end": "13:45", "tz": "Asia/Seoul" },
+      "time": {
+        "start": "12:28",
+        "end": "13:45",
+        "tz": "Asia/Seoul"
+      },
       "who": "靖晃",
       "emoji": "🚄",
       "title": "復路・通常KTX 024 一般室でソウルへ（動力集中・初体験）",
@@ -167,7 +271,11 @@
     },
     {
       "id": "hitomi-lunch",
-      "time": { "start": "12:30", "end": "13:45", "tz": "Asia/Seoul" },
+      "time": {
+        "start": "12:30",
+        "end": "13:45",
+        "tz": "Asia/Seoul"
+      },
       "who": "ひとみ",
       "emoji": "☕",
       "title": "明洞で昼食・買い物 → 合流へ",
@@ -175,7 +283,11 @@
     },
     {
       "id": "meetup",
-      "time": { "start": "13:45", "end": "14:15", "tz": "Asia/Seoul" },
+      "time": {
+        "start": "13:45",
+        "end": "14:15",
+        "tz": "Asia/Seoul"
+      },
       "who": "夫婦",
       "emoji": "🤝",
       "title": "明洞でひとみと合流",
@@ -183,7 +295,11 @@
     },
     {
       "id": "myeongdong-shopping",
-      "time": { "start": "14:15", "end": "15:15", "tz": "Asia/Seoul" },
+      "time": {
+        "start": "14:15",
+        "end": "15:15",
+        "tz": "Asia/Seoul"
+      },
       "who": "夫婦",
       "emoji": "🛍️",
       "title": "明洞ショッピング",
@@ -191,7 +307,11 @@
     },
     {
       "id": "buchon-yukhoe",
-      "time": { "start": "15:15", "end": "16:30", "tz": "Asia/Seoul" },
+      "time": {
+        "start": "15:15",
+        "end": "16:30",
+        "tz": "Asia/Seoul"
+      },
       "who": "夫婦",
       "emoji": "🥩",
       "title": "광장시장 부촌육회で生もの三点",
@@ -199,7 +319,11 @@
     },
     {
       "id": "dongdaemun",
-      "time": { "start": "16:30", "end": "17:00", "tz": "Asia/Seoul" },
+      "time": {
+        "start": "16:30",
+        "end": "17:00",
+        "tz": "Asia/Seoul"
+      },
       "who": "夫婦",
       "emoji": "🏬",
       "title": "東大門・DDPショッピング",
@@ -207,7 +331,11 @@
     },
     {
       "id": "nakkopsae",
-      "time": { "start": "17:00", "end": "18:00", "tz": "Asia/Seoul" },
+      "time": {
+        "start": "17:00",
+        "end": "18:00",
+        "tz": "Asia/Seoul"
+      },
       "who": "夫婦",
       "emoji": "🐙",
       "title": "ナッコプセ夕食（용호동낙지・東大門）",
@@ -215,7 +343,11 @@
     },
     {
       "id": "free-time",
-      "time": { "start": "18:00", "end": "18:45", "tz": "Asia/Seoul" },
+      "time": {
+        "start": "18:00",
+        "end": "18:45",
+        "tz": "Asia/Seoul"
+      },
       "who": "夫婦",
       "emoji": "🕐",
       "title": "フリータイム（+45分のゆとり）",
@@ -223,7 +355,11 @@
     },
     {
       "id": "move-to-station",
-      "time": { "start": "18:45", "end": "19:05", "tz": "Asia/Seoul" },
+      "time": {
+        "start": "18:45",
+        "end": "19:05",
+        "tz": "Asia/Seoul"
+      },
       "who": "夫婦",
       "emoji": "🚇",
       "title": "ソウル駅へ移動開始",
@@ -231,7 +367,11 @@
     },
     {
       "id": "wowpass-cashout",
-      "time": { "start": "19:05", "end": "19:20", "tz": "Asia/Seoul" },
+      "time": {
+        "start": "19:05",
+        "end": "19:20",
+        "tz": "Asia/Seoul"
+      },
       "who": "夫婦",
       "emoji": "💳",
       "title": "ソウル駅・WOWPASS現金化（最後の機会）",
@@ -239,15 +379,23 @@
     },
     {
       "id": "arex-return",
-      "time": { "start": "19:36", "end": "20:19", "tz": "Asia/Seoul" },
+      "time": {
+        "start": "19:36",
+        "end": "20:19",
+        "tz": "Asia/Seoul"
+      },
       "who": "夫婦",
       "emoji": "🚆",
-      "title": "AREX直通で仁川T1へ（19:36発）",
-      "notes": "チケットは19:36のまま（無料変更は安全網として温存）。万一→19:06前倒し可。"
+      "title": "AREX直通 A1041 で仁川T1へ（19:36発・2号車8A/8B）",
+      "notes": "【予約確定】予約番号 2605187910629。A1041・2号車8A・8B（大人2）。搭乗はソウル駅15番出口→B2直通列車乗り場（1・4号線利用時はB3で下車しB2へ）。無料変更で19:06前倒しも可（安全網として温存）。"
     },
     {
       "id": "icn-snack",
-      "time": { "start": "20:25", "end": "20:40", "tz": "Asia/Seoul" },
+      "time": {
+        "start": "20:25",
+        "end": "20:40",
+        "tz": "Asia/Seoul"
+      },
       "who": "夫婦",
       "emoji": "☕",
       "title": "仁川で飲み物程度（省略可）",
@@ -255,7 +403,11 @@
     },
     {
       "id": "checkin-return",
-      "time": { "start": "20:40", "end": "21:00", "tz": "Asia/Seoul" },
+      "time": {
+        "start": "20:40",
+        "end": "21:00",
+        "tz": "Asia/Seoul"
+      },
       "who": "夫婦",
       "emoji": "🎒",
       "title": "チェックイン・荷物預け入れ",
@@ -263,7 +415,11 @@
     },
     {
       "id": "immigration-return",
-      "time": { "start": "21:00", "end": "21:20", "tz": "Asia/Seoul" },
+      "time": {
+        "start": "21:00",
+        "end": "21:20",
+        "tz": "Asia/Seoul"
+      },
       "who": "夫婦",
       "emoji": "🛂",
       "title": "出国審査・保安検査（復路）",
@@ -271,7 +427,11 @@
     },
     {
       "id": "duty-free",
-      "time": { "start": "21:30", "end": "22:00", "tz": "Asia/Seoul" },
+      "time": {
+        "start": "21:30",
+        "end": "22:00",
+        "tz": "Asia/Seoul"
+      },
       "who": "夫婦",
       "emoji": "🥃",
       "title": "免税店（Mastercard/現金で）",
@@ -279,7 +439,11 @@
     },
     {
       "id": "boarding-return",
-      "time": { "start": "22:00", "end": "22:20", "tz": "Asia/Seoul" },
+      "time": {
+        "start": "22:00",
+        "end": "22:20",
+        "tz": "Asia/Seoul"
+      },
       "who": "夫婦",
       "emoji": "✈️",
       "title": "搭乗ゲートへ → MM808 22:35発",
@@ -360,8 +524,16 @@
       "orderMeaning": "ナッコプセ（タコ・ホルモン・エビの激辛鍋）2人前ください",
       "notes": "夕食メイン。辛さ調整可。締めのチャーハン/ラーメンは腹具合で判断。",
       "extras": [
-        { "script": "볶음밥 추가할게요.", "reading": "ポックムパプ チュガハルケヨ", "meaning": "チャーハン追加" },
-        { "script": "덜 맵게 해 주실 수 있어요?", "reading": "トル メプケ ヘ ジュシル ス イッソヨ?", "meaning": "辛さ控えめにできますか?" }
+        {
+          "script": "볶음밥 추가할게요.",
+          "reading": "ポックムパプ チュガハルケヨ",
+          "meaning": "チャーハン追加"
+        },
+        {
+          "script": "덜 맵게 해 주실 수 있어요?",
+          "reading": "トル メプケ ヘ ジュシル ス イッソヨ?",
+          "meaning": "辛さ控えめにできますか?"
+        }
       ]
     }
   ],
@@ -369,7 +541,10 @@
     "strategy": "T-money・Mastercard・現金の三本柱。WOWPASSは現金化一択。",
     "tmoney": {
       "role": "交通（地下鉄・バス・AREX一般列車）",
-      "balance": { "靖晃": 15000, "ひとみ": 12000 },
+      "balance": {
+        "靖晃": 15000,
+        "ひとみ": 12000
+      },
       "preCharged": true
     },
     "mastercard": {
@@ -438,7 +613,279 @@
     }
   },
   "communication": {
-    "auKaihoudai": { "cost": 800, "data": "無制限", "note": "メイン端末" },
-    "rakutenRoaming": { "cost": 0, "data": "2GB/端末", "note": "サブ端末・ひとみ端末" }
+    "auKaihoudai": {
+      "cost": 800,
+      "data": "無制限",
+      "note": "メイン端末"
+    },
+    "rakutenRoaming": {
+      "cost": 0,
+      "data": "2GB/端末",
+      "note": "サブ端末・ひとみ端末"
+    }
+  },
+  "extras": {
+    "reminders": [
+      "e-Arrival Card を出発前にオンライン申請（2026年から紙廃止）",
+      "復路 MM808 は最終便（22:35発・後がない）。ピーチ締切は出発50分前",
+      "カードは必ずウォン建て決済（DCC回避で3-5%節約）",
+      "WOWPASS は夜ソウル駅で現金化一択"
+    ],
+    "apps": [
+      {
+        "label": "NAVER Map",
+        "emoji": "🗺",
+        "url": "https://map.naver.com/",
+        "note": "韓国はGoogleマップが弱い。ナビはこれ"
+      },
+      {
+        "label": "KakaoMap",
+        "emoji": "🧭",
+        "url": "https://map.kakao.com/",
+        "note": "もう一つの定番地図"
+      },
+      {
+        "label": "Papago",
+        "emoji": "🗣",
+        "url": "https://papago.naver.com/",
+        "note": "韓国語に強い翻訳・カメラ翻訳"
+      },
+      {
+        "label": "Google翻訳",
+        "emoji": "🌐",
+        "url": "https://translate.google.com/?sl=ja&tl=ko&op=translate"
+      },
+      {
+        "label": "ソウル天気",
+        "emoji": "☀️",
+        "url": "https://www.google.com/search?q=서울+날씨"
+      },
+      {
+        "label": "為替(₩→¥)",
+        "emoji": "💱",
+        "url": "https://www.google.com/search?q=1000+won+to+jpy"
+      }
+    ],
+    "bookings": [
+      {
+        "label": "AREX 予約・チケット（復路 予約番号 2605187910629）",
+        "url": "https://www.airportrailroad.com/ticket/info",
+        "note": "空港鉄道（直通）の公式チケット案内。復路は予約確定：A1041・2号車8A/8B・ソウル駅19:36発（往路はA1004・4号車6C/6D）。乗車券QRはここから確認"
+      }
+    ],
+    "toilets": [
+      {
+        "rank": 1,
+        "name": "ロッテ百貨店 本店",
+        "area": "明洞・乙支路入口（乙支路入口駅 直結）",
+        "clean": "★★★ 最上級（デパート品質）",
+        "tip": "明洞での駆け込みはここが鉄板。化粧室が広く混雑にも強い。",
+        "near": [
+          {
+            "spot": "瑞源/明洞（朝食）",
+            "walk": "徒歩5分"
+          },
+          {
+            "spot": "明洞ショッピング",
+            "walk": "徒歩3〜5分"
+          }
+        ]
+      },
+      {
+        "rank": 2,
+        "name": "仁川空港 第1ターミナル",
+        "area": "仁川空港 T1",
+        "clean": "★★★ 世界トップクラス",
+        "tip": "復路チェックイン前後に。個室・パウダー充実。",
+        "near": [
+          {
+            "spot": "復路チェックイン",
+            "walk": "館内すぐ"
+          },
+          {
+            "spot": "AREX 仁川到着",
+            "walk": "連絡通路すぐ"
+          }
+        ]
+      },
+      {
+        "rank": 3,
+        "name": "ソウル駅 構内",
+        "area": "ソウル駅（AREX/KTX）",
+        "clean": "★★★ 清潔・数も多い",
+        "tip": "朝の到着時と、夜のWOWPASS現金化のタイミングで使える。",
+        "near": [
+          {
+            "spot": "AREXソウル駅着（朝）",
+            "walk": "改札内すぐ"
+          },
+          {
+            "spot": "WOWPASS現金化（夜）",
+            "walk": "同フロア"
+          }
+        ]
+      },
+      {
+        "rank": 4,
+        "name": "斗山타워 / 現代アウトレット 東大門",
+        "area": "東大門（DDP周辺）",
+        "clean": "★★☆ 商業施設で安定",
+        "tip": "ナッコプセや東大門の買い物の合間に。",
+        "near": [
+          {
+            "spot": "용호동낙지（夕食）",
+            "walk": "徒歩5分"
+          },
+          {
+            "spot": "東大門・DDP",
+            "walk": "徒歩3〜5分"
+          }
+        ]
+      },
+      {
+        "rank": 5,
+        "name": "広蔵市場 周辺の建物・カフェ",
+        "area": "鍾路5街（広蔵市場）",
+        "clean": "★☆☆ 市場内トイレは衛生面△",
+        "tip": "市場内は混雑＆簡素。隣接ビルやスタバ等のカフェ利用が無難。",
+        "near": [
+          {
+            "spot": "부촌육회（広蔵市場）",
+            "walk": "市場内〜徒歩3分"
+          },
+          {
+            "spot": "鍾路5街駅",
+            "walk": "徒歩2分"
+          }
+        ]
+      },
+      {
+        "rank": 6,
+        "name": "大田駅 構内（靖晃）",
+        "area": "大田駅（KTX）",
+        "clean": "★★☆ 駅構内で清潔",
+        "tip": "靖晃の大田パート。ATMキャッシングや食堂の前後に。",
+        "near": [
+          {
+            "spot": "광천식당（大田）",
+            "walk": "駅から徒歩圏"
+          },
+          {
+            "spot": "성심당",
+            "walk": "駅周辺"
+          }
+        ]
+      },
+      {
+        "rank": 7,
+        "name": "新世界百貨店 本店（明洞・会賢）",
+        "area": "明洞・会賢（会賢駅直結／明洞から徒歩約7分）",
+        "clean": "★★★ 最上級（老舗デパート）",
+        "tip": "ロッテが混むときの明洞・第二候補。化粧室がゆったりで南大門側に出るとき便利。",
+        "near": [
+          {
+            "spot": "明洞ショッピング",
+            "walk": "徒歩5〜7分"
+          },
+          {
+            "spot": "南大門市場",
+            "walk": "徒歩3分"
+          }
+        ]
+      },
+      {
+        "rank": 8,
+        "name": "明洞駅 / 乙支路入口駅 構内（地下鉄）",
+        "area": "明洞（4号線 明洞駅・2号線 乙支路入口駅）",
+        "clean": "★★☆ 無料・改札内で概ね清潔",
+        "tip": "買い物の合間にサッと。改札内なので入場前に。ポケットティッシュ携帯が無難。",
+        "near": [
+          {
+            "spot": "明洞ショッピング",
+            "walk": "駅直結"
+          },
+          {
+            "spot": "瑞源・明洞（朝食）",
+            "walk": "徒歩5分"
+          }
+        ]
+      },
+      {
+        "rank": 9,
+        "name": "現代百貨店 狎鴎亭本店（ひとみ）",
+        "area": "狎鴎亭（狎鴎亭駅 直結エリア）",
+        "clean": "★★★ 最上級（高級百貨店）",
+        "tip": "ひとみの狎鴎亭パート。Goshen前後の身支度に最適。パウダールーム充実。",
+        "near": [
+          {
+            "spot": "Goshen Beauty",
+            "walk": "徒歩圏"
+          },
+          {
+            "spot": "狎鴎亭駅",
+            "walk": "直結"
+          }
+        ]
+      },
+      {
+        "rank": 10,
+        "name": "仁川空港 T1 出国エリア（免税フロア・各ゲート）",
+        "area": "仁川空港 T1（保安検査後エアサイド）",
+        "clean": "★★★ 世界トップクラス",
+        "tip": "復路の保安検査を抜けた後。搭乗前にここで済ませると安心。各ゲート付近に点在。",
+        "near": [
+          {
+            "spot": "免税店（復路）",
+            "walk": "館内すぐ"
+          },
+          {
+            "spot": "MM808 搭乗ゲート",
+            "walk": "各ゲート付近"
+          }
+        ]
+      },
+      {
+        "rank": 11,
+        "name": "KTX 車内・大田駅ホーム（靖晃）",
+        "area": "KTX車内／大田駅",
+        "clean": "★★☆ 車両連結部に洗面所",
+        "tip": "靖晃の往復KTX。各連結部にトイレ。混雑時は乗車前に大田駅・ソウル駅で済ませるのが確実。",
+        "near": [
+          {
+            "spot": "KTX 017/024 乗車",
+            "walk": "連結部"
+          },
+          {
+            "spot": "大田駅（광천식당/성심당）",
+            "walk": "駅構内"
+          }
+        ]
+      },
+      {
+        "rank": 12,
+        "name": "東大門 굿모닝시티 / ミリオレ等のファッションビル",
+        "area": "東大門（DDP周辺の商業ビル）",
+        "clean": "★★☆ ファッションビルで安定",
+        "tip": "夜の東大門買い物・ナッコプセの合間に。Doota（現代アウトレット）が混むときの代替。",
+        "near": [
+          {
+            "spot": "용호동낙지（ナッコプセ）",
+            "walk": "徒歩5分"
+          },
+          {
+            "spot": "DDP",
+            "walk": "徒歩3分"
+          }
+        ]
+      }
+    ],
+    "weather": [
+      {
+        "label": "ソウル",
+        "lat": 37.5665,
+        "lon": 126.978,
+        "date": "2026-06-17"
+      }
+    ]
   }
 }

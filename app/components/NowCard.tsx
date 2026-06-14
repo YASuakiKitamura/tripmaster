@@ -10,6 +10,55 @@ import {
 import type { ItineraryItem } from "../lib/types";
 import { useNow, formatSeoulClock, TRIP_DATE } from "../lib/useNow";
 
+const pad2 = (n: number) => String(n).padStart(2, "0");
+
+function splitMs(ms: number) {
+  const s = Math.max(0, Math.floor(ms / 1000));
+  return {
+    days: Math.floor(s / 86_400),
+    hours: Math.floor((s % 86_400) / 3_600),
+    mins: Math.floor((s % 3_600) / 60),
+    secs: s % 60,
+  };
+}
+
+/** 行動中・次の予定向けのコンパクトな残り時間（日は残っていれば前置）。 */
+function inlineCountdown(ms: number): string {
+  const { days, hours, mins, secs } = splitMs(ms);
+  const parts: string[] = [];
+  if (days) parts.push(`${days}日`);
+  if (days || hours) parts.push(`${hours}時間`);
+  parts.push(`${mins}分`);
+  parts.push(`${secs}秒`);
+  return parts.join(" ");
+}
+
+/** 出発まで向けの大きなカウントダウン（日／時／分／秒）。秒だけ控えめに。 */
+function BigCountdown({ ms }: { ms: number }) {
+  const { days, hours, mins, secs } = splitMs(ms);
+  const units: { value: string; label: string; secondary?: boolean }[] = [];
+  if (days > 0) units.push({ value: String(days), label: "日" });
+  units.push({ value: pad2(hours), label: "時間" });
+  units.push({ value: pad2(mins), label: "分" });
+  units.push({ value: pad2(secs), label: "秒", secondary: true });
+  return (
+    <div className="flex items-baseline gap-2">
+      {units.map((u) => (
+        <div key={u.label} className="flex items-baseline gap-0.5">
+          <span
+            className={`font-bold tabular-nums leading-none ${
+              u.secondary ? "text-[20px] opacity-75" : "text-[30px]"
+            }`}
+          >
+            {u.value}
+          </span>
+          <span className="text-[12px] font-bold opacity-80">{u.label}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export function NowCard({
   itinerary,
   perspective = "混合",
@@ -17,7 +66,8 @@ export function NowCard({
   itinerary: ItineraryItem[];
   perspective?: Perspective;
 }) {
-  const now = useNow();
+  // 毎秒更新でリアルタイム風のカウントダウンにする。
+  const now = useNow(1_000);
 
   if (now === null) {
     return (
@@ -57,12 +107,11 @@ export function NowCard({
   let body: React.ReactNode;
 
   if (now < tripStart) {
-    const days = Math.ceil((tripStart - now) / 86_400_000);
     headline = "出発まで";
     body = (
       <>
-        <p className="text-[28px] font-bold">あと {days} 日</p>
-        <p className="mt-1 text-[13px] opacity-90">
+        <BigCountdown ms={tripStart - now} />
+        <p className="mt-1.5 text-[13px] opacity-90">
           {seoulDate === TRIP_DATE
             ? "いよいよ当日！"
             : "出発前の準備を確認しておきましょう。"}
@@ -82,6 +131,9 @@ export function NowCard({
         <p className="mt-1 text-[13px] opacity-90">
           {current.time.start}–{current.time.end}（{current.who}）
         </p>
+        <p className="mt-1.5 text-[14px] font-bold tabular-nums">
+          終了まで あと {inlineCountdown(itineraryEndMs(current) - now)}
+        </p>
       </>
     );
   } else {
@@ -93,6 +145,9 @@ export function NowCard({
         </p>
         <p className="mt-1 text-[13px] opacity-90">
           {next.time.start} から（{next.who}）
+        </p>
+        <p className="mt-1.5 text-[14px] font-bold tabular-nums">
+          開始まで あと {inlineCountdown(itineraryStartMs(next) - now)}
         </p>
       </>
     ) : (
