@@ -140,6 +140,41 @@ export function HomeClient() {
         </div>
       )}
 
+      {/* 出発前ラウンジ（あれば） */}
+      {trip.lounge && (
+        <div className="mt-4 rounded-[12px] border border-[var(--border)] bg-white p-4 shadow-[var(--shadow)]">
+          <h2 className="font-serif-jp text-[15px] font-bold text-[var(--accent-dark)]">
+            🍸 出発前ラウンジ
+          </h2>
+          <p className="mt-1 text-[14px] font-bold">{trip.lounge.name}</p>
+          <p className="mt-0.5 text-[12px] text-[var(--text-sub)]">
+            {trip.lounge.location}
+          </p>
+          <p className="mt-1 text-[12px] text-[var(--text-sub)]">
+            🕐 {trip.lounge.hours}
+            {trip.lounge.maxStayHours
+              ? `（最大${trip.lounge.maxStayHours}時間）`
+              : ""}
+          </p>
+          <ul className="mt-2 space-y-0.5 text-[12px] leading-[1.5]">
+            {trip.lounge.access.map((a) => (
+              <li key={a.name}>
+                <span className="font-bold text-[var(--accent-dark)]">
+                  {a.name}
+                </span>
+                ：{a.detail}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-2 text-[11px] leading-[1.5] text-[var(--text-sub)]">
+            {trip.lounge.services.join(" / ")}
+          </p>
+          <p className="mt-1 text-[11px] font-bold text-[var(--accent)]">
+            🚪 最寄: {trip.lounge.nearestGate}
+          </p>
+        </div>
+      )}
+
       {/* ナビゲーションカード */}
       <div className="mt-5 grid grid-cols-2 gap-3">
         {cards.map((item) => (

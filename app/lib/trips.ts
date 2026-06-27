@@ -39,6 +39,7 @@ export const trips: TripMeta[] = [
     status: "ready",
     teaser: "レンタカー2泊3日。美ら海・首里・うるまの旅。",
   },
+  // ADMIN:TRIPS-END ▼ /admin（旅データ管理）が新しい旅をこの行の上に挿入します。残してください。
 ];
 
 export const DEFAULT_TRIP_ID = "seoul-2026";

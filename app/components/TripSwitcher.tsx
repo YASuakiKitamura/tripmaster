@@ -69,6 +69,17 @@ export function TripSwitcher() {
                 </button>
               );
             })}
+            <a
+              href="/admin"
+              role="menuitem"
+              onClick={() => setOpen(false)}
+              className="flex w-full items-center gap-2 border-t border-[var(--border)] px-3 py-2.5 text-left text-[var(--text-sub)] active:bg-[var(--bg)]"
+            >
+              <span className="text-[18px]">🛠</span>
+              <span className="flex-1 text-[12px] font-bold leading-tight">
+                旅データ管理
+              </span>
+            </a>
           </div>
         </>
       )}

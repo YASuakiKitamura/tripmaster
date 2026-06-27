@@ -3,6 +3,7 @@
 import seoulRaw from "@/app/data/trips/seoul-2026.json";
 import himejiRaw from "@/app/data/trips/himeji-okayama-2026.json";
 import okinawaRaw from "@/app/data/trips/okinawa-2026.json";
+// ADMIN:IMPORTS-END ▼ /admin が新しい国内旅の import をこの行の上に挿入します。残してください。
 import type { TripData, ItineraryItem } from "./types";
 import { getTrip, DEFAULT_TRIP_ID } from "./trips";
 import { navItems, type NavItem } from "./nav";
@@ -90,6 +91,15 @@ interface SeoulExtras {
 }
 interface SeoulData extends TripData {
   extras: SeoulExtras;
+  lounge: {
+    name: string;
+    location: string;
+    hours: string;
+    access: Record<string, string>;
+    services: string[];
+    nearestGate: string;
+    maxStayHours?: number;
+  };
 }
 
 const himeji = himejiRaw as unknown as HimejiData;
@@ -199,6 +209,16 @@ export interface ResolvedTrip {
     checkIn: string;
     checkOut: string;
     notes?: string;
+  };
+  /** 出発前ラウンジ（あれば）。ホームにカード表示 */
+  lounge?: {
+    name: string;
+    location: string;
+    hours: string;
+    access: { name: string; detail: string }[];
+    services: string[];
+    nearestGate: string;
+    maxStayHours?: number;
   };
   tips?: { title: string; body: string }[];
   reminders: string[];
@@ -357,6 +377,13 @@ function resolveSeoul(): ResolvedTrip {
         },
       ],
     },
+    lounge: {
+      ...t.lounge,
+      access: Object.entries(t.lounge.access).map(([name, detail]) => ({
+        name,
+        detail,
+      })),
+    },
     reminders: seoul.extras.reminders,
     apps: seoul.extras.apps,
     bookings: seoul.extras.bookings,
@@ -462,6 +489,7 @@ function resolveDomestic(t: HimejiData, id: string): ResolvedTrip {
 const DOMESTIC: Record<string, HimejiData> = {
   "himeji-okayama-2026": himeji,
   "okinawa-2026": okinawa,
+  // ADMIN:DOMESTIC-END ▼ /admin が新しい国内旅のエントリをこの行の上に挿入します。残してください。
 };
 
 export function resolveTrip(id: string): ResolvedTrip {
