@@ -47,6 +47,7 @@ export function AdminClient() {
 
   const [creating, setCreating] = useState(false);
   const [form, setForm] = useState<CreateForm>(EMPTY_CREATE);
+  const [promptCopied, setPromptCopied] = useState(false);
 
   const refresh = useCallback(async () => {
     setLoading(true);
@@ -162,15 +163,36 @@ export function AdminClient() {
     }
   };
 
-  const downloadPrompt = () => {
-    const id = form.id.trim() || "trip";
-    const md = buildTripJsonPrompt({
-      id,
+  const promptText = () =>
+    buildTripJsonPrompt({
+      id: form.id.trim() || "trip",
       name: form.name,
       destination: form.destination,
       dateLabel: form.dateLabel,
     });
-    const blob = new Blob([md], { type: "text/markdown;charset=utf-8" });
+
+  const copyPrompt = async () => {
+    const md = promptText();
+    try {
+      await navigator.clipboard.writeText(md);
+    } catch {
+      // クリップボードAPIが使えない環境のフォールバック（旧Safari等）
+      const ta = document.createElement("textarea");
+      ta.value = md;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+    }
+    setPromptCopied(true);
+    setTimeout(() => setPromptCopied(false), 2000);
+  };
+
+  const downloadPrompt = () => {
+    const id = form.id.trim() || "trip";
+    const blob = new Blob([promptText()], { type: "text/markdown;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -285,14 +307,23 @@ export function AdminClient() {
             専用 resolver が必要なため対象外です。
           </p>
 
-          <button
-            onClick={downloadPrompt}
-            className="mt-3 flex w-full items-center justify-center gap-2 rounded-[10px] border border-[var(--accent)] bg-[var(--accent-light)] px-4 py-2.5 text-[13px] font-bold text-[var(--accent-dark)] active:opacity-90"
-          >
-            📄 JSON作成プロンプトをダウンロード
-          </button>
+          <div className="mt-3 flex gap-2">
+            <button
+              onClick={copyPrompt}
+              className="flex flex-1 items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[var(--accent)] to-[var(--accent-dark)] px-4 py-2.5 text-[13px] font-bold text-white active:opacity-90"
+            >
+              {promptCopied ? "✓ コピーしました" : "📋 JSON作成プロンプトをコピー"}
+            </button>
+            <button
+              onClick={downloadPrompt}
+              title="プロンプトを .md でダウンロード"
+              className="rounded-[10px] border border-[var(--accent)] px-3 py-2.5 text-[13px] font-bold text-[var(--accent-dark)] active:bg-[var(--accent-light)]"
+            >
+              📄 DL
+            </button>
+          </div>
           <p className="mt-1 text-[11px] leading-[1.6] text-[var(--text-sub)]">
-            上の id・名称・日付を入れてからDLすると前提に反映されます。落とした .md を
+            上の id・名称・日付を入れてからコピーすると前提に反映されます。コピーした文面を
             ChatGPT / Claude 等に貼り、出てきた JSON をこのページのエディタに貼り付けて保存します。
           </p>
 
