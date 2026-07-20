@@ -8,7 +8,8 @@ export function BottomNav() {
   const pathname = usePathname();
   const trip = useResolvedTrip();
   const navItems = trip.nav;
-  if (pathname === "/login") return null;
+  // ログインと印刷プレビューでは下部ナビを出さない（紙面の邪魔になるため）
+  if (pathname === "/login" || pathname === "/print") return null;
   return (
     <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-[var(--border)] bg-white/95 backdrop-blur-sm pb-[env(safe-area-inset-bottom)]">
       <ul className="no-scrollbar mx-auto flex max-w-[680px] overflow-x-auto">

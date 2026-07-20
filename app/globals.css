@@ -99,3 +99,192 @@ body {
 .font-serif-jp {
   font-family: var(--font-serif-jp);
 }
+
+/* ===== 紙の旅程表（/print） =====
+   画面ではプレビュー、印刷では A4 縦に収まる白黒基調に切り替える。
+   アプリの他ページには影響しない（.print-sheet 配下と @media print のみ）。 */
+.print-sheet {
+  background: #fff;
+  color: #111;
+  font-family: var(--font-serif-jp), var(--font-jp), serif;
+  font-weight: 400;
+  line-height: 1.7;
+  padding: 16px 14px 40px;
+  font-size: 13px;
+}
+.print-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg);
+  padding: 10px 12px;
+  margin-bottom: 18px;
+  font-family: var(--font-jp);
+  font-size: 12px;
+}
+.print-toolbar button {
+  border-radius: 10px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  padding: 8px 16px;
+  white-space: nowrap;
+}
+.sheet-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  border-bottom: 2.5px solid #111;
+  padding-bottom: 8px;
+}
+.sheet-head h1 {
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.sheet-dates {
+  font-size: 13px;
+  margin-top: 2px;
+}
+.sheet-head-side {
+  text-align: right;
+  font-size: 11px;
+  white-space: nowrap;
+}
+.sheet-summary {
+  margin-top: 12px;
+  font-size: 12px;
+}
+.sheet-block {
+  margin-top: 20px;
+  break-inside: auto;
+}
+.sheet-block h2 {
+  font-size: 14px;
+  font-weight: 700;
+  border-left: 5px solid #111;
+  padding-left: 8px;
+  margin-bottom: 7px;
+  break-after: avoid;
+}
+.sheet-block h3 {
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 10px;
+  margin-bottom: 3px;
+  break-after: avoid;
+}
+.sheet-block ul {
+  padding-left: 1.3em;
+  list-style: disc;
+  font-size: 12px;
+}
+.sheet-block ul.checklist {
+  list-style: none;
+  padding-left: 0;
+}
+.sheet-block ul.checklist li::before {
+  content: "☐ ";
+  font-weight: 700;
+}
+.print-sheet table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.print-sheet th,
+.print-sheet td {
+  border: 1px solid #999;
+  padding: 5px 7px;
+  vertical-align: top;
+  text-align: left;
+}
+.print-sheet thead th {
+  background: #eee;
+  font-weight: 700;
+  font-size: 11px;
+}
+.print-sheet table.kv th {
+  width: 68px;
+  background: #eee;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.print-sheet .col-time {
+  width: 62px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.print-sheet .col-title {
+  width: 32%;
+  font-weight: 700;
+}
+.print-sheet .col-note {
+  font-size: 11px;
+  line-height: 1.55;
+}
+.print-sheet tbody tr {
+  break-inside: avoid;
+}
+.print-sheet .dim {
+  color: #666;
+  font-weight: 400;
+}
+.print-sheet .warn {
+  color: #000;
+}
+.warn-box {
+  border: 2px solid #111;
+  padding: 7px 9px;
+  font-size: 12px;
+}
+.sheet-foot {
+  margin-top: 26px;
+  border-top: 1px solid #999;
+  padding-top: 6px;
+  font-size: 10px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm 10mm;
+  }
+  /* アプリの外枠（ヘッダー・下部ナビ・操作バー）は紙に出さない */
+  body > header,
+  body > nav,
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #fff !important;
+    padding-bottom: 0 !important;
+  }
+  body > main {
+    max-width: none !important;
+  }
+  .print-sheet {
+    padding: 0;
+    font-size: 10.5pt;
+  }
+  .print-sheet table,
+  .print-sheet .warn-box {
+    break-inside: auto;
+  }
+  /* 日ごとに改ページ（1日目の先頭では改ページしない） */
+  .day-block + .day-block {
+    break-before: page;
+  }
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+}
