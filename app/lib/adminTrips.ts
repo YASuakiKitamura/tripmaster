@@ -147,18 +147,48 @@ export async function registerDomestic(meta: TripMeta): Promise<void> {
   );
 }
 
-/** trips.ts から id のエントリ（{ ... } ブロック）を1つ削除。 */
-async function removeTripEntry(id: string): Promise<void> {
-  const src = await fs.readFile(TRIPS_TS, "utf8");
-  const lines = src.split("\n");
+/** trips.ts 内の id のエントリ範囲 [start, end]（"{" 行と "}," 行）を返す。無ければ null。 */
+function findTripEntryRange(
+  lines: string[],
+  id: string,
+): { start: number; end: number } | null {
   const idLine = lines.findIndex((l) => l.includes(`id: ${JSON.stringify(id)},`));
-  if (idLine === -1) return;
+  if (idLine === -1) return null;
   let start = idLine;
   while (start >= 0 && lines[start].trim() !== "{") start--;
   let end = idLine;
   while (end < lines.length && lines[end].trim() !== "},") end++;
-  if (start < 0 || end >= lines.length) return;
-  lines.splice(start, end - start + 1);
+  if (start < 0 || end >= lines.length) return null;
+  return { start, end };
+}
+
+/**
+ * 一覧での表示/非表示を切り替える（trips.ts のエントリに hidden: true を出し入れする）。
+ * 旅データ・resolver には触らないので、非表示にしても旅そのものは動く。
+ */
+export async function setTripHidden(id: string, hidden: boolean): Promise<void> {
+  const src = await fs.readFile(TRIPS_TS, "utf8");
+  const lines = src.split("\n");
+  const range = findTripEntryRange(lines, id);
+  if (!range) throw new Error(`${id} は trips.ts に登録されていません`);
+
+  // まず既存の hidden 行を取り除いてから、必要なら入れ直す（冪等）。
+  const body = lines
+    .slice(range.start, range.end + 1)
+    .filter((l) => !/^\s*hidden:\s*(true|false),?\s*$/.test(l));
+  if (hidden) body.splice(body.length - 1, 0, "    hidden: true,");
+
+  lines.splice(range.start, range.end - range.start + 1, ...body);
+  await fs.writeFile(TRIPS_TS, lines.join("\n"), "utf8");
+}
+
+/** trips.ts から id のエントリ（{ ... } ブロック）を1つ削除。 */
+async function removeTripEntry(id: string): Promise<void> {
+  const src = await fs.readFile(TRIPS_TS, "utf8");
+  const lines = src.split("\n");
+  const range = findTripEntryRange(lines, id);
+  if (!range) return;
+  lines.splice(range.start, range.end - range.start + 1);
   await fs.writeFile(TRIPS_TS, lines.join("\n"), "utf8");
 }
 

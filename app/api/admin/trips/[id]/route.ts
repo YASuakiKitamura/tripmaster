@@ -5,6 +5,7 @@ import {
   writeTrip,
   deleteTrip,
   listTrips,
+  setTripHidden,
   writesEnabled,
   validId,
 } from "@/app/lib/adminTrips";
@@ -60,6 +61,27 @@ export async function PUT(req: Request, { params }: Ctx) {
   } catch (e) {
     const message = e instanceof Error ? e.message : "保存に失敗しました";
     return NextResponse.json({ error: `JSON が不正です: ${message}` }, { status: 400 });
+  }
+}
+
+// 一覧での表示/非表示だけを切り替える（trips.ts の hidden フラグ）。
+export async function PATCH(req: Request, { params }: Ctx) {
+  if (!(await requireUser())) return unauthorized();
+  if (!writesEnabled()) return readOnly();
+  const { id } = await params;
+  if (!validId(id)) {
+    return NextResponse.json({ error: "bad request" }, { status: 400 });
+  }
+  const body = (await req.json().catch(() => null)) as { hidden?: unknown } | null;
+  if (typeof body?.hidden !== "boolean") {
+    return NextResponse.json({ error: "hidden(boolean) が必要です" }, { status: 400 });
+  }
+  try {
+    await setTripHidden(id, body.hidden);
+    return NextResponse.json({ ok: true, hidden: body.hidden });
+  } catch (e) {
+    const message = e instanceof Error ? e.message : "切り替えに失敗しました";
+    return NextResponse.json({ error: message }, { status: 400 });
   }
 }
 

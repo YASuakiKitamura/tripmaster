@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 # PP添乗員（旅行ガイド Web アプリ）
 
 スマホ向けの旅行ガイド。複数の旅を切り替えられ、AI が当日の行動を案内する。
-収録の旅（北邑夫婦）: ①韓国日帰り（弾丸ソウル 2026.06.17）②姫路・岡山 1泊2日（2026.07.29–30）
+収録の旅（北邑夫婦）: ①韓国日帰り（弾丸ソウル 2026.06.17）②明石・姫路・岡山 1泊2日（2026.07.29–30・id は `himeji-okayama-renew`）
 ③沖縄ドライブ 2泊3日（2026.09.29–10.01・レンタカー）。
 
 - 本番: Vercel（https://seoul-2026-eight.vercel.app）。`primecool.com` 限定の Google 認証。
@@ -49,7 +49,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 構造の違う旅を共通モデルに正規化して描画する。
 
 - **旅レジストリ** `app/lib/trips.ts`: `TripMeta`（id/name/destination/emoji/dateLabel/status）。
-- **旅データ** `app/data/trips/<id>.json`（seoul-2026 / himeji-okayama-2026 / okinawa-2026）。
+- **旅データ** `app/data/trips/<id>.json`（seoul-2026 / himeji-okayama-renew / okinawa-2026）。
 - **正規化** `app/lib/resolveTrip.ts`: `resolveTrip(id)` が各JSONを共通 `ResolvedTrip` に変換
   （legs / stores+highlights / payment.methods+currency / emergency.sections / toilets /
   weather / apps / reminders / confirmList / nav / hasPhrases・hasChecklist）。
@@ -63,6 +63,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   `ThemeApplier`（`<html data-trip>` とステータスバー色を旅に追従）。
 
 ### 新しい旅の追加手順
+> 💡 **/tripmaster** スキル（`.claude/skills/tripmaster/`）: 会話やメモで練った計画を tripmaster 形式に整形して取り込む（JSON生成→配線→型チェックまで一気通貫）。完全版スキーマ（extras込み）は `.claude/skills/tripmaster/references/schema.md`。
+> 💡 GUI 派は `/admin`（ローカル）でも可: ＋新規作成→プロンプトをコピーしてAIでJSON生成→📂/📋 で読み込み→保存（登録は自動）。
 1. `app/data/trips/<id>.json` を用意（国内旅は姫路型スキーマ。生成プロンプトは `docs/himeji-json-prompt.md`）。
    レンタカー旅でも transport.outbound/return は往復**フライト**、レンタカー貸出/返却は itinerary 項目で表現。
 2. `app/lib/trips.ts` にエントリ追加、`status: "ready"`。
@@ -84,6 +86,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 `/timeline`（**カレンダー型**・詳細シートに写真メモ）、`/phrases`（ソウルのみ）、`/stores`（店舗ごとに写真メモ）、`/payment`、
 `/toilets`（**現在地で近い順**対応）、`/checklist`（ソウルのみ）、`/emergency`。
 ナビは `resolveTrip(id).nav` で旅ごとに出し分け（国内＝姫路・沖縄はフレーズ/準備を非表示）。
+`/admin`（旅データ管理・開発者向け・ナビ非表示）: `app/data/trips/*.json` の CRUD。新規作成は雛形JSON生成＋
+`trips.ts`/`resolveTrip.ts` への自動登録（`ADMIN:` マーカー行に挿入）。エディタに「📂 生成JSONを読み込む」
+（ファイル選択）と「📋 クリップボードから」ボタンがあり、AIで生成したJSONを取り込める（整形して展開→保存で確定）。
+**書き込みはローカル/Docker のみ**（本番 Vercel は閲覧専用）。ベースJSONの本番反映は再デプロイが必要。
 
 ## 当日ライブ編集＆アジャイル機能（重要）
 旅程を当日その場で動的に変更できる。ベースJSONは不変、編集は差分で重ねる。

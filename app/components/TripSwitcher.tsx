@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { trips } from "../lib/trips";
+import { visibleTrips } from "../lib/trips";
 import { useTrip } from "../lib/useTrip";
 
 export function TripSwitcher() {
   const [tripId, setTripId] = useTrip();
   const [open, setOpen] = useState(false);
+  const list = visibleTrips(tripId);
 
   return (
     <div className="relative">
@@ -30,7 +31,7 @@ export function TripSwitcher() {
             role="menu"
             className="absolute right-0 z-[100] mt-1.5 w-[238px] overflow-hidden rounded-[12px] border border-[var(--border)] bg-white text-[var(--text)] shadow-[var(--shadow-hover)]"
           >
-            {trips.map((t) => {
+            {list.map((t) => {
               const active = t.id === tripId;
               return (
                 <button
@@ -59,6 +60,7 @@ export function TripSwitcher() {
                     <span className="block text-[10px] font-normal text-[var(--text-sub)]">
                       {t.dateLabel}
                       {t.status === "coming-soon" ? " ・準備中" : ""}
+                      {t.hidden ? " ・非表示" : ""}
                     </span>
                   </span>
                   {active && (

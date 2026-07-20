@@ -132,7 +132,7 @@ export function buildTripJsonPrompt(opts: PromptOptions): string {
     `旅行プランを相談しているチャット（ChatGPT / Claude 等）に、`,
     `下の「---」以降をそのまま貼り付けて使ってください。`,
     `出てきた JSON を PP添乗員の管理ページ（/admin）で旅「${opts.id}」を選び、`,
-    `エディタに貼り付けて保存します。`,
+    `「📂 生成JSONを読み込む」（.jsonファイル）または「📋 クリップボードから」で取り込んで保存します。`,
     ``,
     `---`,
     ``,

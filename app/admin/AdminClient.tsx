@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { PageTitle, Tag } from "../components/ui";
 import { buildTripJsonPrompt } from "../lib/tripJsonPrompt";
 
@@ -9,7 +9,13 @@ interface TripFileInfo {
   hasFile: boolean;
   registered: boolean;
   managed: boolean;
-  meta?: { name: string; emoji: string; dateLabel: string; status: string };
+  meta?: {
+    name: string;
+    emoji: string;
+    dateLabel: string;
+    status: string;
+    hidden?: boolean;
+  };
 }
 
 interface CreateForm {
@@ -48,6 +54,7 @@ export function AdminClient() {
   const [creating, setCreating] = useState(false);
   const [form, setForm] = useState<CreateForm>(EMPTY_CREATE);
   const [promptCopied, setPromptCopied] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const refresh = useCallback(async () => {
     setLoading(true);
@@ -99,6 +106,41 @@ export function AdminClient() {
     }
   };
 
+  // ChatGPT/Claude 等で生成した JSON をエディタに取り込む。
+  // 有効な JSON なら整形して読み込み、構文エラーがあってもそのまま載せて修正できるようにする。
+  const loadJsonText = (text: string, source: string) => {
+    const t = text.trim();
+    if (!t) {
+      setMsg({ kind: "err", text: `${source}が空です` });
+      return;
+    }
+    try {
+      setJson(JSON.stringify(JSON.parse(t), null, 2));
+      setParseError(null);
+      setMsg({ kind: "ok", text: `${source}から JSON を読み込みました。内容を確認して保存してください` });
+    } catch (e) {
+      setJson(t);
+      setParseError(e instanceof Error ? e.message : "不正な JSON");
+      setMsg({ kind: "err", text: `${source}から読み込みましたが JSON に構文エラーがあります` });
+    }
+  };
+
+  const loadFromFile = async (file: File) => {
+    loadJsonText(await file.text(), `ファイル（${file.name}）`);
+  };
+
+  const pasteFromClipboard = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      loadJsonText(text, "クリップボード");
+    } catch {
+      setMsg({
+        kind: "err",
+        text: "クリップボードを読めませんでした。エディタに直接貼り付けてください",
+      });
+    }
+  };
+
   const save = async () => {
     if (!selected || parseError) return;
     setBusy(true);
@@ -135,6 +177,31 @@ export function AdminClient() {
       await refresh();
     } catch (e) {
       setMsg({ kind: "err", text: e instanceof Error ? e.message : "削除に失敗" });
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  // 一覧（🧭 旅の変更）に出すかどうかだけを切り替える。JSON もコード登録もそのまま。
+  const toggleHidden = async (info: TripFileInfo) => {
+    const next = !info.meta?.hidden;
+    setBusy(true);
+    setMsg(null);
+    try {
+      const res = await fetch(`/api/admin/trips/${info.id}`, {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ hidden: next }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "切り替えに失敗");
+      setMsg({
+        kind: "ok",
+        text: `${info.id} を${next ? "非表示" : "表示"}にしました（反映にはページの再読み込みが必要）`,
+      });
+      await refresh();
+    } catch (e) {
+      setMsg({ kind: "err", text: e instanceof Error ? e.message : "切り替えに失敗" });
     } finally {
       setBusy(false);
     }
@@ -263,34 +330,56 @@ export function AdminClient() {
         )}
         {trips.map((t) => {
           const active = t.id === selected;
+          const hidden = !!t.meta?.hidden;
           return (
-            <button
+            <div
               key={t.id}
-              onClick={() => openTrip(t.id)}
-              className={`flex w-full items-center gap-2 border-b border-[var(--border)] px-3 py-2.5 text-left last:border-0 active:bg-[var(--bg)] ${
+              className={`flex items-center border-b border-[var(--border)] last:border-0 ${
                 active ? "bg-[var(--accent-light)]" : ""
-              }`}
+              } ${hidden ? "opacity-55" : ""}`}
             >
-              <span className="text-[18px]">{t.meta?.emoji ?? "🧳"}</span>
-              <span className="min-w-0 flex-1 leading-tight">
-                <span className="block truncate text-[13px] font-bold">
-                  {t.meta?.name ?? t.id}
+              <button
+                onClick={() => openTrip(t.id)}
+                className="flex min-w-0 flex-1 items-center gap-2 py-2.5 pl-3 text-left active:bg-[var(--bg)]"
+              >
+                <span className="text-[18px]">{t.meta?.emoji ?? "🧳"}</span>
+                <span className="min-w-0 flex-1 leading-tight">
+                  <span className="block truncate text-[13px] font-bold">
+                    {t.meta?.name ?? t.id}
+                  </span>
+                  <span className="block font-mono text-[10px] text-[var(--text-sub)]">
+                    {t.id}.json
+                  </span>
                 </span>
-                <span className="block font-mono text-[10px] text-[var(--text-sub)]">
-                  {t.id}.json
+                <span className="flex shrink-0 flex-wrap items-center justify-end gap-1">
+                  {hidden && <Tag color="purple">非表示</Tag>}
+                  {t.meta?.status === "ready" ? (
+                    <Tag color="green">ready</Tag>
+                  ) : t.meta ? (
+                    <Tag color="orange">準備中</Tag>
+                  ) : null}
+                  {!t.hasFile && <Tag color="orange">file無</Tag>}
+                  {!t.registered && <Tag color="purple">未登録</Tag>}
+                  {t.managed && <Tag color="blue">admin</Tag>}
                 </span>
-              </span>
-              <span className="flex shrink-0 flex-wrap items-center justify-end gap-1">
-                {t.meta?.status === "ready" ? (
-                  <Tag color="green">ready</Tag>
-                ) : t.meta ? (
-                  <Tag color="orange">準備中</Tag>
-                ) : null}
-                {!t.hasFile && <Tag color="orange">file無</Tag>}
-                {!t.registered && <Tag color="purple">未登録</Tag>}
-                {t.managed && <Tag color="blue">admin</Tag>}
-              </span>
-            </button>
+              </button>
+              <button
+                onClick={() => toggleHidden(t)}
+                disabled={!writesEnabled || busy || !t.registered}
+                title={
+                  !t.registered
+                    ? "trips.ts に未登録のため切り替えできません"
+                    : hidden
+                      ? "一覧に表示する"
+                      : "一覧から非表示にする"
+                }
+                aria-label={hidden ? `${t.id} を一覧に表示` : `${t.id} を一覧から非表示`}
+                aria-pressed={hidden}
+                className="shrink-0 px-3 py-2.5 text-[17px] leading-none disabled:opacity-30"
+              >
+                {hidden ? "🙈" : "👁"}
+              </button>
+            </div>
           );
         })}
       </div>
@@ -324,7 +413,8 @@ export function AdminClient() {
           </div>
           <p className="mt-1 text-[11px] leading-[1.6] text-[var(--text-sub)]">
             上の id・名称・日付を入れてからコピーすると前提に反映されます。コピーした文面を
-            ChatGPT / Claude 等に貼り、出てきた JSON をこのページのエディタに貼り付けて保存します。
+            ChatGPT / Claude 等に貼り、出てきた JSON はエディタの「📂 生成JSONを読み込む」
+            （ファイル）または「📋 クリップボードから」で取り込んで保存します。
           </p>
 
           <div className="mt-3 space-y-2.5">
@@ -428,6 +518,33 @@ export function AdminClient() {
             {selectedInfo && !selectedInfo.managed && selectedInfo.registered && (
               <Tag color="purple">組み込み（削除はコード手動）</Tag>
             )}
+          </div>
+          <div className="mt-2 flex gap-2">
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              disabled={!writesEnabled || busy}
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-[8px] border border-[var(--accent)] px-3 py-2 text-[12px] font-bold text-[var(--accent-dark)] active:bg-[var(--accent-light)] disabled:opacity-40"
+            >
+              📂 生成JSONを読み込む
+            </button>
+            <button
+              onClick={pasteFromClipboard}
+              disabled={!writesEnabled || busy}
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-[8px] border border-[var(--border)] px-3 py-2 text-[12px] font-bold text-[var(--text-sub)] active:bg-[var(--bg)] disabled:opacity-40"
+            >
+              📋 クリップボードから
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".json,application/json,text/plain"
+              className="hidden"
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                if (f) loadFromFile(f);
+                e.target.value = ""; // 同じファイルを再選択できるようにリセット
+              }}
+            />
           </div>
           <textarea
             value={json}

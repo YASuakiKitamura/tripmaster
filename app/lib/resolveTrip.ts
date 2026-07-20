@@ -1,8 +1,8 @@
 // 旅ごとに異なる JSON 構造（ソウル=海外便/フレーズ/入国、姫路=空路/宿/豆知識）を
 // 共通の ResolvedTrip に正規化する。サーバー/クライアント両方から import 可能（純データ）。
 import seoulRaw from "@/app/data/trips/seoul-2026.json";
-import himejiRaw from "@/app/data/trips/himeji-okayama-2026.json";
 import okinawaRaw from "@/app/data/trips/okinawa-2026.json";
+import trip_himeji_okayama_renewRaw from "@/app/data/trips/himeji-okayama-renew.json";
 // ADMIN:IMPORTS-END ▼ /admin が新しい国内旅の import をこの行の上に挿入します。残してください。
 import type { TripData, ItineraryItem } from "./types";
 import { getTrip, DEFAULT_TRIP_ID } from "./trips";
@@ -102,7 +102,6 @@ interface SeoulData extends TripData {
   };
 }
 
-const himeji = himejiRaw as unknown as HimejiData;
 const okinawa = okinawaRaw as unknown as HimejiData;
 
 // ---- 正規化後の型 ----
@@ -487,8 +486,8 @@ function resolveDomestic(t: HimejiData, id: string): ResolvedTrip {
 // 国内旅レジストリ: 構造が同じ姫路型JSONを id で引く。新しい国内旅は
 // JSON を import して1エントリ足すだけ（変換ロジックは触らない）。
 const DOMESTIC: Record<string, HimejiData> = {
-  "himeji-okayama-2026": himeji,
   "okinawa-2026": okinawa,
+  "himeji-okayama-renew": trip_himeji_okayama_renewRaw as unknown as HimejiData,
   // ADMIN:DOMESTIC-END ▼ /admin が新しい国内旅のエントリをこの行の上に挿入します。残してください。
 };
 

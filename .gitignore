@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Claude Code（端末ごとのローカル許可設定。スキルは共有する）
+.claude/settings.local.json

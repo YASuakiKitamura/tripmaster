@@ -10,6 +10,12 @@ export interface TripMeta {
   status: "ready" | "coming-soon";
   /** coming-soon の旅でティザー表示する一言 */
   teaser?: string;
+  /**
+   * true にすると「🧭 旅の変更」の一覧から隠す（終わった旅・下書きの旅の整理用）。
+   * データと resolver は残るので、選択中の旅が hidden でも表示は壊れない。
+   * /admin の 👁 ボタンで切り替える。
+   */
+  hidden?: boolean;
 }
 
 export const trips: TripMeta[] = [
@@ -22,15 +28,6 @@ export const trips: TripMeta[] = [
     status: "ready",
   },
   {
-    id: "himeji-okayama-2026",
-    name: "姫路・岡山",
-    destination: "姫路・岡山",
-    emoji: "🏯",
-    dateLabel: "2026.07.29–07.30",
-    status: "ready",
-    teaser: "国内1泊2日。姫路城と岡山の旅。",
-  },
-  {
     id: "okinawa-2026",
     name: "沖縄ドライブ",
     destination: "沖縄",
@@ -39,10 +36,27 @@ export const trips: TripMeta[] = [
     status: "ready",
     teaser: "レンタカー2泊3日。美ら海・首里・うるまの旅。",
   },
+  {
+    id: "himeji-okayama-renew",
+    name: "明石・姫路・岡山",
+    destination: "神戸・明石・姫路・岡山・倉敷",
+    emoji: "🌉",
+    dateLabel: "2026.07.29–07.30",
+    status: "ready",
+    teaser: "国内1泊2日。明石焼き・姫路城・倉敷の夜景。",
+  },
   // ADMIN:TRIPS-END ▼ /admin（旅データ管理）が新しい旅をこの行の上に挿入します。残してください。
 ];
 
 export const DEFAULT_TRIP_ID = "seoul-2026";
+
+/**
+ * 旅の切替メニューに出す一覧。hidden の旅は隠すが、いま選択中の旅だけは
+ * 隠さない（隠した旅を選んだまま切り替え先を見失うのを防ぐため）。
+ */
+export function visibleTrips(currentId?: string): TripMeta[] {
+  return trips.filter((t) => !t.hidden || t.id === currentId);
+}
 
 export function getTrip(id: string): TripMeta | undefined {
   return trips.find((t) => t.id === id);

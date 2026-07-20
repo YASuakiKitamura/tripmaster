@@ -41,6 +41,15 @@
   --accent2: #ef5a76; /* ハイビスカス（差し色） */
 }
 
+/* 明石・姫路・岡山：好古園・後楽園の緑＋倉敷夜景の柿色 */
+:root[data-trip="himeji-okayama-renew"] {
+  --bg: #f5faf5;
+  --accent: #2f7d4f; /* 好古園・後楽園の緑（主色） */
+  --accent-light: #dff0e2;
+  --accent-dark: #1d5533;
+  --accent2: #d97730; /* 常夜灯の灯り（差し色） */
+}
+
 @theme inline {
   --color-bg: var(--bg);
   --color-card: var(--card);
