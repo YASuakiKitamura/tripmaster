@@ -126,12 +126,25 @@ body {
   font-family: var(--font-jp);
   font-size: 12px;
 }
+.print-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 .print-toolbar button {
   border-radius: 10px;
   background: var(--accent);
   color: #fff;
   font-weight: 700;
   padding: 8px 16px;
+  white-space: nowrap;
+}
+.print-back {
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  color: var(--text-sub);
+  font-weight: 700;
+  padding: 8px 14px;
   white-space: nowrap;
 }
 .sheet-head {

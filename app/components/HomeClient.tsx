@@ -300,6 +300,23 @@ export function HomeClient() {
         </div>
       )}
 
+      {/* 紙の旅程表への導線（付録：出発前に印刷/PDF保存できる） */}
+      <a
+        href="/print"
+        className="mt-6 flex items-center gap-3 rounded-[14px] border border-[var(--accent)] bg-white p-4 shadow-[var(--shadow)] active:scale-[0.99] active:shadow-[var(--shadow-hover)]"
+      >
+        <span className="text-[26px] leading-none">🖨</span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-[14px] font-bold text-[var(--accent-dark)]">
+            旅程表を印刷する
+          </span>
+          <span className="mt-0.5 block text-[12px] leading-[1.5] text-[var(--text-sub)]">
+            紙の1枚にまとめてプリント／PDF保存。持ち歩き用に。
+          </span>
+        </span>
+        <span className="text-[18px] text-[var(--accent)]">›</span>
+      </a>
+
       <NowOverridePanel
         open={clockOpen}
         onClose={() => setClockOpen(false)}

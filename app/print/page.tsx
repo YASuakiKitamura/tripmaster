@@ -66,7 +66,12 @@ export default function PrintPage() {
         <p>
           紙の旅程表プレビューです。印刷またはPDF保存できます（A4縦・余白は「標準」推奨）。
         </p>
-        <button onClick={() => window.print()}>🖨 印刷する</button>
+        <div className="print-toolbar-actions">
+          <a href="/" className="print-back">
+            ← アプリに戻る
+          </a>
+          <button onClick={() => window.print()}>🖨 印刷する</button>
+        </div>
       </div>
 
       <header className="sheet-head">
