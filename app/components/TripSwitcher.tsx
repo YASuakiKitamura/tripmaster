@@ -72,20 +72,6 @@ export function TripSwitcher() {
               );
             })}
             <a
-              href="/print"
-              role="menuitem"
-              onClick={() => setOpen(false)}
-              className="flex w-full items-center gap-2 border-t border-[var(--border)] px-3 py-2.5 text-left active:bg-[var(--bg)]"
-            >
-              <span className="text-[18px]">🖨</span>
-              <span className="flex-1 text-[12px] font-bold leading-tight">
-                旅程表を印刷
-                <span className="block text-[10px] font-normal text-[var(--text-sub)]">
-                  紙の1枚にまとめる
-                </span>
-              </span>
-            </a>
-            <a
               href="/admin"
               role="menuitem"
               onClick={() => setOpen(false)}

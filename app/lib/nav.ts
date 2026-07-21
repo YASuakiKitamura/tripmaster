@@ -14,4 +14,5 @@ export const navItems: NavItem[] = [
   { href: "/toilets", label: "トイレ", emoji: "🚻", desc: "きれいなトイレ順" },
   { href: "/checklist", label: "準備", emoji: "✅", desc: "出発前チェック" },
   { href: "/emergency", label: "緊急", emoji: "🆘", desc: "最終便と脱出プラン" },
+  { href: "/print", label: "印刷", emoji: "🖨", desc: "紙の旅程表" },
 ];
